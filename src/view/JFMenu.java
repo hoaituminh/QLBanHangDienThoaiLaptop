@@ -64,11 +64,13 @@ public class JFMenu extends JFrame {
                       "Lập Hóa Đơn Bán Hàng (JFLapHoaDon)",      "Giao Dịch",    true),
         new MenuEntry("Quản Lý Sản Phẩm",     "SP", "SanPham",
                       "Quản Lý Hệ Thống Sản Phẩm (JFSanPham)",   "Sản phẩm",    false),
+        new MenuEntry("Thống Kê",             "TK", "ThongKe",
+                      "Thống Kê Bán Hàng (JFThongKe)",            "Biểu đồ",     false),
         new MenuEntry("Quản Lý Khách Hàng",   "KH", "KhachHang",
                       "Quản Lý Khách Hàng (JFKhachHang)",         "Đối tác",     false),
         new MenuEntry("Quản Lý Nhân Viên",    "NV", "NhanVien",
                       "Quản Lý Nhân Sự (JFNhanVien)",             "Nhân viên",   false),
-        new MenuEntry("Quản Lý Tài Khoản",    "TK", "TaiKhoan",
+        new MenuEntry("Quản Lý Tài Khoản",    "TQ", "TaiKhoan",
                       "Phân Quyền & Quản Lý Tài Khoản (JFTaiKhoan)", "Bảo mật", false),
     };
 
@@ -603,6 +605,15 @@ addWindowFocusListener(new WindowAdapter() {
             reloadMap.put("SanPham",   () -> invokeLoadData(spCtrl)); // ← chỉ thêm dòng này
         } catch (Exception ex) {
             pnlCards.add(createPlaceholder("Lỗi nạp form Sản Phẩm"), "SanPham");
+        }
+        try {
+            JFThongKe frmThongKe = new JFThongKe();
+            ThongKeController thongKeCtrl = new ThongKeController(frmThongKe);
+            pnlCards.add(wrapFormContent(frmThongKe.getContentPane()), "ThongKe");
+            frmThongKe.setContentPane(new JPanel());
+            reloadMap.put("ThongKe", () -> invokeLoadData(thongKeCtrl));
+        } catch (Exception ex) {
+            pnlCards.add(createPlaceholder("Lỗi nạp form Thống Kê"), "ThongKe");
         }
         try {
             JFKhachHang frmKH = new JFKhachHang();

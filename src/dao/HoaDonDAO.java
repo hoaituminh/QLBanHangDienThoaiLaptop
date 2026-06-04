@@ -330,4 +330,53 @@ public class HoaDonDAO {
         }
         return list;
     }
+
+    public ArrayList<Object[]> getNhomNganhHangBanChay(int limit) {
+        ArrayList<Object[]> list = new ArrayList<>();
+        int top = Math.max(1, limit);
+        String sql = "SELECT TOP " + top + " ISNULL(l.TenLoai, N'Chưa phân loại') AS TenLoai, "
+                   + "       SUM(ct.SoLuong) AS SoLuong "
+                   + "FROM   CHITIETHOADON ct "
+                   + "INNER JOIN SANPHAM sp ON ct.MaSP = sp.MaSP "
+                   + "LEFT JOIN LOAISP l ON sp.MaLoai = l.MaLoai "
+                   + "GROUP BY ISNULL(l.TenLoai, N'Chưa phân loại') "
+                   + "ORDER BY SUM(ct.SoLuong) DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Object[] {
+                    rs.getString("TenLoai"),
+                    rs.getInt("SoLuong")
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public ArrayList<Object[]> getDoanhThuTrong7NgayQua() {
+        ArrayList<Object[]> list = new ArrayList<>();
+        String sql = "SELECT CAST(NgayLap AS date) AS Ngay, "
+                   + "       ISNULL(SUM(TongTien), 0) AS DoanhThu "
+                   + "FROM   HOADON "
+                   + "WHERE  NgayLap >= DATEADD(day, -6, CAST(GETDATE() AS date)) "
+                   + "AND    NgayLap <  DATEADD(day,  1, CAST(GETDATE() AS date)) "
+                   + "GROUP BY CAST(NgayLap AS date) "
+                   + "ORDER BY CAST(NgayLap AS date)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Object[] {
+                    rs.getDate("Ngay"),
+                    rs.getDouble("DoanhThu")
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

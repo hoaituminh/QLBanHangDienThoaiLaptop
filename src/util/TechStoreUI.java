@@ -14,14 +14,18 @@ import java.awt.*;
 /** Tiện ích giao diện TechStore (theo mockup HTML). */
 public final class TechStoreUI {
 
-    public static final Color BG_MAIN     = new Color(248, 250, 252);
-    public static final Color CARD_BG     = Color.WHITE;
-    public static final Color BORDER      = new Color(226, 232, 240);
-    public static final Color TEXT_TITLE  = new Color(15, 23, 42);
-    public static final Color TEXT_MUTED  = new Color(100, 116, 139);
-    public static final Color INDIGO      = new Color(79, 70, 229);
-    public static final Color INDIGO_LIGHT= new Color(238, 242, 255);
-    public static final Color AMBER       = new Color(245, 158, 11);
+    public static Color BG_MAIN     = new Color(248, 250, 252);
+    public static Color CARD_BG     = Color.WHITE;
+    public static Color BORDER      = new Color(226, 232, 240);
+    public static Color TEXT_TITLE  = new Color(15, 23, 42);
+    public static Color TEXT_MUTED  = new Color(100, 116, 139);
+    public static Color FIELD_BG    = new Color(248, 250, 252);
+    public static Color TABLE_HEAD  = new Color(248, 250, 252);
+    public static Color INDIGO      = new Color(79, 70, 229);
+    public static Color INDIGO_LIGHT= new Color(238, 242, 255);
+    public static Color AMBER       = new Color(245, 158, 11);
+
+    private static boolean darkMode = false;
 
     public static final Font FONT_MAIN = new Font("Segoe UI", Font.PLAIN, 14);
     public static final Font FONT_BOLD = new Font("Segoe UI", Font.BOLD, 14);
@@ -33,9 +37,16 @@ public final class TechStoreUI {
 
     /** FlatLaf (nếu có) — gọi trước khi tạo bất kỳ cửa sổ Swing nào. */
     public static void installLookAndFeel() {
+        installLookAndFeel(darkMode);
+    }
+
+    public static void installLookAndFeel(boolean dark) {
+        setDarkMode(dark);
         try {
             // 1. Cố gắng cài đặt giao diện FlatLightLaf hiện đại
-            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatLightLaf");
+            UIManager.setLookAndFeel(dark
+                ? "com.formdev.flatlaf.FlatDarkLaf"
+                : "com.formdev.flatlaf.FlatLightLaf");
             
             // 2. Tinh chỉnh thêm cấu hình mặc định (Bo góc mềm mại cho toàn app)
             UIManager.put("Button.arc", 12);
@@ -56,6 +67,33 @@ public final class TechStoreUI {
         }
     }
 
+    public static void setDarkMode(boolean dark) {
+        darkMode = dark;
+        if (dark) {
+            BG_MAIN = new Color(2, 6, 23);
+            CARD_BG = new Color(15, 23, 42);
+            BORDER = new Color(30, 41, 59);
+            TEXT_TITLE = new Color(248, 250, 252);
+            TEXT_MUTED = new Color(148, 163, 184);
+            FIELD_BG = new Color(15, 23, 42);
+            TABLE_HEAD = new Color(15, 23, 42);
+            INDIGO_LIGHT = new Color(49, 46, 129);
+        } else {
+            BG_MAIN = new Color(248, 250, 252);
+            CARD_BG = Color.WHITE;
+            BORDER = new Color(226, 232, 240);
+            TEXT_TITLE = new Color(15, 23, 42);
+            TEXT_MUTED = new Color(100, 116, 139);
+            FIELD_BG = new Color(248, 250, 252);
+            TABLE_HEAD = new Color(248, 250, 252);
+            INDIGO_LIGHT = new Color(238, 242, 255);
+        }
+    }
+
+    public static boolean isDarkMode() {
+        return darkMode;
+    }
+
     public static JPanel createCard() {
          JPanel p = new JPanel();
     p.setBackground(CARD_BG);
@@ -64,7 +102,8 @@ public final class TechStoreUI {
     boolean isFlatLaf = UIManager.getLookAndFeel().getClass().getName().contains("Flat");
     if (isFlatLaf) {
         // SỬA TẠI ĐÂY: Thay đổi cú pháp định dạng viền chuẩn FlatLaf
-        p.putClientProperty("FlatLaf.style", "border: 1,1,1,1, #e2e8f0, 1, 12");
+        p.putClientProperty("FlatLaf.style",
+            "border: 1,1,1,1, " + colorHex(BORDER) + ", 1, 12");
         p.setBorder(new EmptyBorder(20, 24, 20, 24));
     } else {
         p.setBorder(BorderFactory.createCompoundBorder(
@@ -111,17 +150,17 @@ public final class TechStoreUI {
     public static JTextField createField(String placeholder) {
         JTextField txt = new JTextField();
         txt.setFont(FONT_MAIN);
-        txt.setBackground(new Color(248, 250, 252));
+        txt.setBackground(FIELD_BG);
         
         boolean isFlatLaf = UIManager.getLookAndFeel().getClass().getName().contains("Flat");
         if (isFlatLaf) {
             // Giữ lại viền gốc bo tròn xịn xò của FlatLaf, chỉ gán padding trong và màu viền đồng bộ
             txt.setMargin(new Insets(8, 10, 8, 10));
             txt.putClientProperty("FlatLaf.style", 
-                "borderColor: #e2e8f0; " +
+                "borderColor: " + colorHex(BORDER) + "; " +
                 "focusedBorderColor: #4f46e5; " +
                 "arc: 12; " +
-                "placeholderForeground: #64748b;"
+                "placeholderForeground: " + colorHex(TEXT_MUTED) + ";"
             );
         } else {
             // Dự phòng khi máy không cài FlatLaf
@@ -237,7 +276,7 @@ public final class TechStoreUI {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
-            setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
+            setBackground(isSelected ? table.getSelectionBackground() : CARD_BG);
             return this;
         }
     }
@@ -290,7 +329,7 @@ public final class TechStoreUI {
         table.setSelectionForeground(TEXT_TITLE);
         JTableHeader h = table.getTableHeader();
         h.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        h.setBackground(new Color(248, 250, 252));
+        h.setBackground(TABLE_HEAD);
         h.setForeground(TEXT_MUTED);
         h.setPreferredSize(new Dimension(0, 38));
         h.setReorderingAllowed(false);
@@ -306,12 +345,12 @@ public final class TechStoreUI {
         icon.setBorder(new EmptyBorder(0, 8, 0, 4));
         icon.setForeground(TEXT_MUTED);
         field.setFont(FONT_SM);
-        field.setBackground(new Color(248, 250, 252));
+        field.setBackground(FIELD_BG);
 
         boolean isFlatLaf = UIManager.getLookAndFeel().getClass().getName().contains("Flat");
         if (isFlatLaf) {
             field.setMargin(new Insets(6, 4, 6, 8));
-            field.putClientProperty("FlatLaf.style", "borderColor: #e2e8f0; focusedBorderColor: #4f46e5; arc: 12;");
+            field.putClientProperty("FlatLaf.style", "borderColor: " + colorHex(BORDER) + "; focusedBorderColor: #4f46e5; arc: 12;");
         } else {
             field.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(BORDER, 1, true),
@@ -321,5 +360,9 @@ public final class TechStoreUI {
         wrap.add(icon, BorderLayout.WEST);
         wrap.add(field, BorderLayout.CENTER);
         return wrap;
+    }
+
+    public static String colorHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 }
