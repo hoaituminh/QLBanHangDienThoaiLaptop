@@ -356,6 +356,48 @@ public class HoaDonDAO {
         return list;
     }
 
+    public ArrayList<Object[]> getDoanhThuTheoLoaiTrong7NgayQua() {
+        ArrayList<Object[]> list = new ArrayList<>();
+        String tenLoai = "LOWER(ISNULL(l.TenLoai, ''))";
+        String nhomLoaiCase =
+                "CASE "
+              + "WHEN " + tenLoai + " LIKE N'%điện%' OR " + tenLoai + " LIKE '%dien%' "
+              + "     OR " + tenLoai + " LIKE '%phone%' THEN N'Điện thoại' "
+              + "WHEN " + tenLoai + " LIKE '%laptop%' OR " + tenLoai + " LIKE N'%máy%' "
+              + "     OR " + tenLoai + " LIKE '%may%' OR " + tenLoai + " LIKE '%computer%' THEN N'Máy tính' "
+              + "ELSE N'Phụ kiện' "
+              + "END";
+        String sql = "WITH RawData AS ("
+                   + "    SELECT CAST(hd.NgayLap AS date) AS Ngay, "
+                   + "           " + nhomLoaiCase + " AS NhomLoai, "
+                   + "           ct.ThanhTien AS ThanhTien "
+                   + "    FROM   HOADON hd "
+                   + "    INNER JOIN CHITIETHOADON ct ON hd.MaHD = ct.MaHD "
+                   + "    INNER JOIN SANPHAM sp ON ct.MaSP = sp.MaSP "
+                   + "    LEFT JOIN LOAISP l ON sp.MaLoai = l.MaLoai "
+                   + "    WHERE  hd.NgayLap >= DATEADD(day, -6, CAST(GETDATE() AS date)) "
+                   + "    AND    hd.NgayLap <  DATEADD(day,  1, CAST(GETDATE() AS date)) "
+                   + ") "
+                   + "SELECT Ngay, NhomLoai, ISNULL(SUM(ThanhTien), 0) AS DoanhThu "
+                   + "FROM   RawData "
+                   + "GROUP BY Ngay, NhomLoai "
+                   + "ORDER BY Ngay, NhomLoai";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new Object[] {
+                    rs.getDate("Ngay"),
+                    rs.getString("NhomLoai"),
+                    rs.getDouble("DoanhThu")
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public ArrayList<Object[]> getDoanhThuTrong7NgayQua() {
         ArrayList<Object[]> list = new ArrayList<>();
         String sql = "SELECT CAST(NgayLap AS date) AS Ngay, "

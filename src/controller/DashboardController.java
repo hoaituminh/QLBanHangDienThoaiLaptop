@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DashboardController {
 
@@ -19,6 +22,8 @@ public class DashboardController {
 
     private final DecimalFormat currencyFormat = new DecimalFormat("#,###,###,### đ");
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private final SimpleDateFormat dayFormat = new SimpleDateFormat("dd/MM");
+    private static final String[] NHOM_LOAI = {"Điện thoại", "Máy tính", "Phụ kiện"};
 
     public DashboardController(JFDashboard view) {
         this.view = view;
@@ -62,11 +67,12 @@ public class DashboardController {
 
                 // Load top sản phẩm bán chạy
                 loadTopSanPham();
+                loadDoanhThuTheoLoaiTrongTuan();
 
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(view, 
-                    "Lỗi khi tải dữ liệu Dashboard: " + e.getMessage(), 
+                    "Lỗi khi tải dữ liệu Dashboard: " + e.getMessage(),
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
@@ -99,6 +105,60 @@ public class DashboardController {
                 formatCurrency((Double) row[2]) // Doanh thu
             });
         }
+    }
+
+    private void loadDoanhThuTheoLoaiTrongTuan() {
+        ArrayList<Object[]> rows = hoaDonDAO.getDoanhThuTheoLoaiTrong7NgayQua();
+        Map<String, Map<String, Double>> data = buildEmptyWeeklyCategoryRevenue();
+
+        for (Object[] row : rows) {
+            if (row[0] instanceof java.util.Date && row[1] != null && row[2] instanceof Number) {
+                String ngay = dayFormat.format((java.util.Date) row[0]);
+                String loai = normalizeLoai(row[1].toString());
+                Map<String, Double> byLoai = data.get(ngay);
+                if (byLoai != null) {
+                    byLoai.put(loai, ((Number) row[2]).doubleValue());
+                }
+            }
+        }
+
+        view.getDatasetDoanhThuLoaiCot().clear();
+        view.getDatasetDoanhThuLoaiLine().clear();
+        for (Map.Entry<String, Map<String, Double>> dayEntry : data.entrySet()) {
+            String ngay = dayEntry.getKey();
+            for (String loai : NHOM_LOAI) {
+                double value = dayEntry.getValue().get(loai);
+                view.getDatasetDoanhThuLoaiCot().addValue(value, loai, ngay);
+                view.getDatasetDoanhThuLoaiLine().addValue(value, loai, ngay);
+            }
+        }
+    }
+
+    private Map<String, Map<String, Double>> buildEmptyWeeklyCategoryRevenue() {
+        Map<String, Map<String, Double>> map = new LinkedHashMap<>();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -6);
+        for (int i = 0; i < 7; i++) {
+            Map<String, Double> byLoai = new LinkedHashMap<>();
+            for (String loai : NHOM_LOAI) {
+                byLoai.put(loai, 0.0);
+            }
+            map.put(dayFormat.format(cal.getTime()), byLoai);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return map;
+    }
+
+    private String normalizeLoai(String raw) {
+        if (raw == null) {
+            return "Phụ kiện";
+        }
+        for (String loai : NHOM_LOAI) {
+            if (loai.equalsIgnoreCase(raw.trim())) {
+                return loai;
+            }
+        }
+        return "Phụ kiện";
     }
 
     private String formatCurrency(double value) {

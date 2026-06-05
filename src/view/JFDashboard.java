@@ -1,11 +1,25 @@
 package view;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
+import java.text.DecimalFormat;
 
 public class JFDashboard extends JPanel {
 
@@ -144,6 +158,8 @@ public class JFDashboard extends JPanel {
     private JTable tblTopSanPham;
     private DefaultTableModel modelHoaDonGanDay;
     private DefaultTableModel modelTopSanPham;
+    private final DefaultCategoryDataset datasetDoanhThuLoaiCot = new DefaultCategoryDataset();
+    private final DefaultCategoryDataset datasetDoanhThuLoaiLine = new DefaultCategoryDataset();
 
     public JFDashboard() {
         initComponents();
@@ -163,6 +179,10 @@ public class JFDashboard extends JPanel {
         mainPanel.add(statsPanel, BorderLayout.NORTH);
 
         // Bảng dữ liệu hai cột phía dưới
+        JPanel centerPanel = new JPanel(new BorderLayout(0, 25));
+        centerPanel.setBackground(util.TechStoreUI.BG_MAIN);
+        centerPanel.add(createChartsPanel(), BorderLayout.NORTH);
+
         JPanel contentPanel = new JPanel(new GridLayout(1, 2, 25, 0));
         contentPanel.setBackground(util.TechStoreUI.BG_MAIN);
 
@@ -174,7 +194,8 @@ public class JFDashboard extends JPanel {
         JPanel topProductsPanel = createTopProductsPanel();
         contentPanel.add(topProductsPanel);
 
-        mainPanel.add(contentPanel, BorderLayout.CENTER);
+        centerPanel.add(contentPanel, BorderLayout.CENTER);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
         add(mainPanel, BorderLayout.CENTER);
     }
 
@@ -215,7 +236,7 @@ public class JFDashboard extends JPanel {
                 new Color(225, 29, 72), 
                 new Color(255, 228, 230), 
                 new Color(190, 18, 60), 
-                "alert", "Mức tồn kho dưới 10!");
+                "alert", "Mức tồn kho từ 10 trở xuống!");
         lblSanPhamCanNhap = sanPhamCanNhapCard.valueLabel;
         statsPanel.add(sanPhamCanNhapCard.panel);
 
@@ -266,6 +287,134 @@ public class JFDashboard extends JPanel {
         card.add(iconAlignPanel, BorderLayout.EAST);
 
         return new StatCard(card, valueLabel, descLabel);
+    }
+
+    private JPanel createChartsPanel() {
+        JPanel chartsPanel = new JPanel(new GridLayout(1, 2, 25, 0));
+        chartsPanel.setBackground(util.TechStoreUI.BG_MAIN);
+        chartsPanel.setPreferredSize(new Dimension(0, 300));
+        chartsPanel.add(createChartCard("Doanh thu theo loại sản phẩm trong tuần", createCategoryRevenueBarChart()));
+        chartsPanel.add(createChartCard("Xu hướng doanh thu trong tuần", createCategoryRevenueLineChart()));
+        return chartsPanel;
+    }
+
+    private JPanel createChartCard(String title, ChartPanel chartPanel) {
+        JPanel panel = new JPanel(new BorderLayout(0, 12));
+        panel.setBackground(util.TechStoreUI.CARD_BG);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(util.TechStoreUI.BORDER, 1),
+            new EmptyBorder(18, 18, 18, 18)
+        ));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        titleLabel.setForeground(util.TechStoreUI.TEXT_TITLE);
+        panel.add(titleLabel, BorderLayout.NORTH);
+        panel.add(chartPanel, BorderLayout.CENTER);
+        return panel;
+    }
+
+    private ChartPanel createCategoryRevenueBarChart() {
+        JFreeChart chart = ChartFactory.createBarChart(
+                "",
+                "Ngày",
+                "Doanh thu",
+                datasetDoanhThuLoaiCot,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+        configureCategoryChart(chart);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setDrawBarOutline(false);
+        renderer.setShadowVisible(false);
+        renderer.setMaximumBarWidth(0.12);
+        renderer.setItemMargin(0.08);
+        renderer.setDefaultToolTipGenerator(new StandardCategoryToolTipGenerator(
+                "{0} - {1}: {2} đ",
+                new DecimalFormat("#,##0")));
+        applySeriesColors(renderer);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPopupMenu(null);
+        panel.setMouseWheelEnabled(true);
+        panel.setBackground(util.TechStoreUI.CARD_BG);
+        return panel;
+    }
+
+    private ChartPanel createCategoryRevenueLineChart() {
+        JFreeChart chart = ChartFactory.createLineChart(
+                "",
+                "Ngày",
+                "Doanh thu",
+                datasetDoanhThuLoaiLine,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+        configureCategoryChart(chart);
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+        renderer.setDefaultShapesVisible(true);
+        renderer.setDefaultShapesFilled(true);
+        renderer.setDefaultStroke(new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        renderer.setDefaultShape(new Ellipse2D.Double(-4, -4, 8, 8));
+        renderer.setDrawOutlines(true);
+        renderer.setUseFillPaint(true);
+        renderer.setDefaultToolTipGenerator(new StandardCategoryToolTipGenerator(
+                "{0} - {1}: {2} đ",
+                new DecimalFormat("#,##0")));
+        applySeriesColors(renderer);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPopupMenu(null);
+        panel.setMouseWheelEnabled(true);
+        panel.setBackground(util.TechStoreUI.CARD_BG);
+        return panel;
+    }
+
+    private void configureCategoryChart(JFreeChart chart) {
+        chart.setBackgroundPaint(util.TechStoreUI.CARD_BG);
+        chart.setBorderVisible(false);
+        if (chart.getLegend() != null) {
+            chart.getLegend().setBackgroundPaint(util.TechStoreUI.CARD_BG);
+            chart.getLegend().setItemPaint(util.TechStoreUI.TEXT_TITLE);
+            chart.getLegend().setItemFont(new Font("Segoe UI", Font.PLAIN, 12));
+        }
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(util.TechStoreUI.CARD_BG);
+        plot.setOutlineVisible(false);
+        plot.setRangeGridlinePaint(util.TechStoreUI.BORDER);
+        plot.setDomainGridlinesVisible(false);
+
+        CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setTickLabelFont(new Font("Segoe UI", Font.PLAIN, 11));
+        domainAxis.setTickLabelPaint(util.TechStoreUI.TEXT_MUTED);
+        domainAxis.setLabelFont(new Font("Segoe UI", Font.BOLD, 12));
+        domainAxis.setLabelPaint(util.TechStoreUI.TEXT_MUTED);
+
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setTickLabelFont(new Font("Segoe UI", Font.PLAIN, 11));
+        rangeAxis.setTickLabelPaint(util.TechStoreUI.TEXT_MUTED);
+        rangeAxis.setLabelFont(new Font("Segoe UI", Font.BOLD, 12));
+        rangeAxis.setLabelPaint(util.TechStoreUI.TEXT_MUTED);
+        rangeAxis.setNumberFormatOverride(new java.text.DecimalFormat("#,##0"));
+    }
+
+    private void applySeriesColors(org.jfree.chart.renderer.category.AbstractCategoryItemRenderer renderer) {
+        renderer.setSeriesPaint(0, new Color(37, 99, 235));
+        renderer.setSeriesPaint(1, new Color(245, 158, 11));
+        renderer.setSeriesPaint(2, new Color(16, 185, 129));
+        renderer.setSeriesOutlinePaint(0, new Color(30, 64, 175));
+        renderer.setSeriesOutlinePaint(1, new Color(180, 83, 9));
+        renderer.setSeriesOutlinePaint(2, new Color(4, 120, 87));
+        renderer.setSeriesFillPaint(0, Color.WHITE);
+        renderer.setSeriesFillPaint(1, Color.WHITE);
+        renderer.setSeriesFillPaint(2, Color.WHITE);
     }
 
     private JPanel createRecentOrdersPanel() {
@@ -415,5 +564,13 @@ public class JFDashboard extends JPanel {
 
     public DefaultTableModel getModelTopSanPham() {
         return modelTopSanPham;
+    }
+
+    public DefaultCategoryDataset getDatasetDoanhThuLoaiCot() {
+        return datasetDoanhThuLoaiCot;
+    }
+
+    public DefaultCategoryDataset getDatasetDoanhThuLoaiLine() {
+        return datasetDoanhThuLoaiLine;
     }
 }
