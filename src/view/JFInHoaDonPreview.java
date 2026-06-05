@@ -33,7 +33,7 @@ public class JFInHoaDonPreview extends JDialog {
 
         JPanel pnlPrint = new JPanel();
         pnlPrint.setLayout(new BoxLayout(pnlPrint, BoxLayout.Y_AXIS));
-        pnlPrint.setBackground(Color.WHITE);
+        pnlPrint.setBackground(util.TechStoreUI.CARD_BG);
         pnlPrint.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(TechStoreUI.BORDER, 2),
             new EmptyBorder(16, 16, 16, 16)));

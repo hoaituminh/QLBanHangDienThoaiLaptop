@@ -135,7 +135,7 @@ public class JFNhanVien extends JFrame {
     public void setEditMode(boolean edit) {
         this.editMode = edit;
         txtMaNV.setEditable(!edit);
-        txtMaNV.setBackground(edit ? new Color(226, 232, 240) : new Color(248, 250, 252));
+        txtMaNV.setBackground(edit ? util.TechStoreUI.BORDER : util.TechStoreUI.BG_MAIN);
         lblFormMode.setText(edit ? " Đang chỉnh sửa " : " Đang thêm mới ");
         if (edit) {
             TechStoreUI.styleUpdateButton(btnLuu, "Cập Nhật Nhân Viên");

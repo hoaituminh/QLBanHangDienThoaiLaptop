@@ -79,58 +79,59 @@ public class JFThongKe extends JFrame {
 
     private ChartPanel createDonutPanel() {
         JFreeChart chart = ChartFactory.createRingChart(
-            "",
-            datasetNganhHang,
-            true,
-            true,
-            false
-        );
-        chart.setBackgroundPaint(Color.WHITE);
+                "",
+                datasetNganhHang,
+                true,
+                true,
+                false);
+        chart.setBackgroundPaint(util.TechStoreUI.CARD_BG);
         chart.getLegend().setItemFont(new Font("Segoe UI", Font.PLAIN, 12));
+        chart.getLegend().setBackgroundPaint(util.TechStoreUI.CARD_BG);
+        chart.getLegend().setItemPaint(util.TechStoreUI.TEXT_TITLE);
 
         RingPlot plot = (RingPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.WHITE);
+        plot.setBackgroundPaint(util.TechStoreUI.CARD_BG);
         plot.setOutlineVisible(false);
         plot.setShadowPaint(null);
         plot.setSectionDepth(0.35);
         plot.setSeparatorsVisible(false);
         plot.setLabelFont(new Font("Segoe UI", Font.PLAIN, 12));
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})",
-            new DecimalFormat("#,##0"),
-            new DecimalFormat("0.0%")
-        ));
-        plot.setLabelBackgroundPaint(new Color(248, 250, 252));
+                "{0}: {1} ({2})",
+                new DecimalFormat("#,##0"),
+                new DecimalFormat("0.0%")));
+        plot.setLabelBackgroundPaint(util.TechStoreUI.BG_MAIN);
+        plot.setLabelPaint(util.TechStoreUI.TEXT_TITLE);
         plot.setLabelOutlinePaint(TechStoreUI.BORDER);
         plot.setLabelShadowPaint(null);
+        plot.setLabelLinkPaint(TechStoreUI.TEXT_MUTED);
         plot.setDrawingSupplier(createChartColors());
 
         donutChart = chart;
         ChartPanel panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);
         panel.setPopupMenu(null);
-        panel.setBackground(Color.WHITE);
+        panel.setBackground(util.TechStoreUI.CARD_BG);
         donutChartPanel = panel;
         return panel;
     }
 
     private ChartPanel createRevenuePanel() {
         JFreeChart chart = ChartFactory.createBarChart(
-            "",
-            "Ngày",
-            "Doanh thu",
-            datasetDoanhThu,
-            PlotOrientation.VERTICAL,
-            false,
-            true,
-            false
-        );
-        chart.setBackgroundPaint(Color.WHITE);
+                "",
+                "Ngày",
+                "Doanh thu",
+                datasetDoanhThu,
+                PlotOrientation.VERTICAL,
+                false,
+                true,
+                false);
+        chart.setBackgroundPaint(util.TechStoreUI.CARD_BG);
 
         CategoryPlot plot = chart.getCategoryPlot();
-        plot.setBackgroundPaint(Color.WHITE);
+        plot.setBackgroundPaint(util.TechStoreUI.CARD_BG);
         plot.setOutlineVisible(false);
-        plot.setRangeGridlinePaint(new Color(226, 232, 240));
+        plot.setRangeGridlinePaint(util.TechStoreUI.BORDER);
         plot.setDomainGridlinesVisible(false);
 
         CategoryAxis domainAxis = plot.getDomainAxis();
@@ -152,29 +153,28 @@ public class JFThongKe extends JFrame {
         ChartPanel panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);
         panel.setPopupMenu(null);
-        panel.setBackground(Color.WHITE);
+        panel.setBackground(util.TechStoreUI.CARD_BG);
         revenueChartPanel = panel;
         return panel;
     }
 
     private DefaultDrawingSupplier createChartColors() {
         Paint[] colors = {
-            new Color(79, 70, 229),
-            new Color(14, 165, 233),
-            new Color(16, 185, 129),
-            new Color(245, 158, 11),
-            new Color(239, 68, 68),
-            new Color(139, 92, 246),
-            new Color(236, 72, 153),
-            new Color(100, 116, 139)
+                new Color(79, 70, 229),
+                new Color(14, 165, 233),
+                new Color(16, 185, 129),
+                new Color(245, 158, 11),
+                new Color(239, 68, 68),
+                new Color(139, 92, 246),
+                new Color(236, 72, 153),
+                new Color(100, 116, 139)
         };
         return new DefaultDrawingSupplier(
-            colors,
-            DefaultDrawingSupplier.DEFAULT_OUTLINE_PAINT_SEQUENCE,
-            DefaultDrawingSupplier.DEFAULT_STROKE_SEQUENCE,
-            DefaultDrawingSupplier.DEFAULT_OUTLINE_STROKE_SEQUENCE,
-            DefaultDrawingSupplier.DEFAULT_SHAPE_SEQUENCE
-        );
+                colors,
+                DefaultDrawingSupplier.DEFAULT_OUTLINE_PAINT_SEQUENCE,
+                DefaultDrawingSupplier.DEFAULT_STROKE_SEQUENCE,
+                DefaultDrawingSupplier.DEFAULT_OUTLINE_STROKE_SEQUENCE,
+                DefaultDrawingSupplier.DEFAULT_SHAPE_SEQUENCE);
     }
 
     public DefaultPieDataset<String> getDatasetNganhHang() {
@@ -203,7 +203,8 @@ public class JFThongKe extends JFrame {
     }
 
     private void applyChartTheme(JFreeChart chart, ChartPanel panel) {
-        if (chart == null) return;
+        if (chart == null)
+            return;
         Color bg = TechStoreUI.CARD_BG;
         Color fg = TechStoreUI.TEXT_TITLE;
         Color grid = TechStoreUI.BORDER;

@@ -91,7 +91,7 @@ public class JFSanPham extends JFrame {
         tabMain = new JTabbedPane();
         tabMain.setFont(new Font("Segoe UI", Font.BOLD, 15));
         tabMain.setBackground(util.TechStoreUI.CARD_BG);
-        tabMain.setForeground(util.TechStoreUI.TEXT_TITLE);
+        tabMain.setForeground(new Color(15, 23, 42));
         tabMain.setFocusable(false);
         tabMain.putClientProperty("JTabbedPane.tabHeight", 40);
         tabMain.putClientProperty("JTabbedPane.tabInsets", new Insets(0, 20, 0, 20));
@@ -110,27 +110,27 @@ public class JFSanPham extends JFrame {
         pnlListTitle.setBackground(util.TechStoreUI.CARD_BG);
         JLabel lblListTitle = new JLabel("Danh Sách Sản Phẩm Kho");
         lblListTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        lblListTitle.setForeground(util.TechStoreUI.TEXT_TITLE);
+        lblListTitle.setForeground(new Color(15, 23, 42));
         lblTongCong = new JLabel("Đang tải dữ liệu...");
         lblTongCong.setFont(smallFont);
-        lblTongCong.setForeground(util.TechStoreUI.TEXT_MUTED);
+        lblTongCong.setForeground(new Color(100, 116, 139));
         pnlListTitle.add(lblListTitle);
         pnlListTitle.add(lblTongCong);
 
         JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnlSearch.setBackground(util.TechStoreUI.CARD_BG);
-
+        
         btnThemMoiTab = new JButton("+ Thêm Sản Phẩm");
         styleButton(btnThemMoiTab, new Color(16, 185, 129), Color.WHITE, "roundRect");
         btnThemMoiTab.setPreferredSize(new Dimension(160, 38));
-
+        
         btnMoBoLoc = new JButton("Bộ Lọc");
         styleButton(btnMoBoLoc, new Color(255, 237, 213), new Color(194, 65, 12), "roundRect");
         btnMoBoLoc.setPreferredSize(new Dimension(100, 38));
-
+        
         txtTimKiem = createTextField("Tìm tên, mã...");
         txtTimKiem.setPreferredSize(new Dimension(250, 38));
-
+        
         btnTimKiem = new JButton("Tìm Kiếm");
         styleButton(btnTimKiem, new Color(56, 189, 248), Color.WHITE, "roundRect");
         btnTimKiem.setPreferredSize(new Dimension(120, 38));
@@ -177,13 +177,11 @@ public class JFSanPham extends JFrame {
         pnlTableContainer.add(pnlRightHeader, BorderLayout.NORTH);
 
         model = new DefaultTableModel(
-                new String[] { "Mã SP", "Hình Ảnh", "Tên Sản Phẩm", "Đơn Giá", "Tồn Kho", "Thương Hiệu", "Loại SP" },
-                0) {
+                new String[] { "Mã SP", "Hình Ảnh", "Tên Sản Phẩm", "Đơn Giá", "Tồn Kho", "Thương Hiệu", "Loại SP" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return false; 
             }
-
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 if (columnIndex == 1) {
@@ -192,7 +190,7 @@ public class JFSanPham extends JFrame {
                 return Object.class;
             }
         };
-
+        
         tblSanPham = new JTable(model) {
             private int hoverRow = -1;
 
@@ -207,7 +205,7 @@ public class JFSanPham extends JFrame {
                         }
                     }
                 });
-
+                
                 addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseExited(java.awt.event.MouseEvent e) {
@@ -220,33 +218,33 @@ public class JFSanPham extends JFrame {
             @Override
             public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
                 Component comp = super.prepareRenderer(renderer, row, column);
-                comp.setForeground(isRowSelected(row) ? getSelectionForeground() : util.TechStoreUI.TEXT_TITLE);
                 if (!isRowSelected(row)) {
-                    comp.setBackground(row == hoverRow ? util.TechStoreUI.BG_MAIN : util.TechStoreUI.CARD_BG);
+                    comp.setBackground(row == hoverRow ? util.TechStoreUI.BG_MAIN : Color.WHITE);
                 } else {
                     comp.setBackground(getSelectionBackground());
                 }
                 return comp;
             }
         };
-
-        util.TechStoreUI.styleTable(tblSanPham);
+        
         tblSanPham.setFont(mainFont);
         tblSanPham.setRowHeight(60); // Đã nâng độ cao hàng để hiển thị ảnh
         tblSanPham.setShowVerticalLines(false);
-        tblSanPham.setGridColor(util.TechStoreUI.BORDER);
+        tblSanPham.setGridColor(util.TechStoreUI.BG_MAIN);
+        tblSanPham.setSelectionBackground(new Color(238, 242, 255));
+        tblSanPham.setSelectionForeground(new Color(15, 23, 42));
         tblSanPham.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         JTableHeader header = tblSanPham.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 13));
         header.setBackground(util.TechStoreUI.BG_MAIN);
-        header.setForeground(util.TechStoreUI.TEXT_MUTED);
+        header.setForeground(new Color(100, 116, 139));
 
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-
+        
         // Điều chỉnh lại cột hiển thị sau khi chèn cột ảnh
         tblSanPham.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
         tblSanPham.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
@@ -266,13 +264,14 @@ public class JFSanPham extends JFrame {
         pnlFooter.add(lblThongKe, BorderLayout.EAST);
         pnlTableContainer.add(pnlFooter, BorderLayout.SOUTH);
 
+
         // ==========================================
         // TAB 2: FORM NHẬP LIỆU
         // ==========================================
-        JPanel pnlFormWrapper = new JPanel(new BorderLayout());
+        JPanel pnlFormWrapper = new JPanel(new BorderLayout()); 
         pnlFormWrapper.setBackground(util.TechStoreUI.BG_MAIN);
-        pnlFormWrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
-
+        pnlFormWrapper.setBorder(new EmptyBorder(20, 20, 20, 20)); 
+        
         JPanel pnlFormContainer = new JPanel(new BorderLayout());
         pnlFormContainer.setBackground(util.TechStoreUI.CARD_BG);
         pnlFormContainer.putClientProperty("FlatLaf.style", "arc: 20");
@@ -302,7 +301,7 @@ public class JFSanPham extends JFrame {
         pnlLeft.setBackground(util.TechStoreUI.CARD_BG);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(12, 0, 12, 0);
+        gbc.insets = new Insets(12, 0, 12, 0); 
         gbc.weightx = 1.0;
         gbc.gridx = 0;
 
@@ -317,8 +316,7 @@ public class JFSanPham extends JFrame {
 
         txtDonGia.getDocument().addDocumentListener(new DocumentListener() {
             private void performFormatting() {
-                if (isFormatting)
-                    return;
+                if (isFormatting) return;
                 isFormatting = true;
                 SwingUtilities.invokeLater(() -> {
                     try {
@@ -334,8 +332,7 @@ public class JFSanPham extends JFrame {
                             String formattedText = df.format(value);
                             int dotsBefore = 0;
                             for (int i = 0; i < Math.min(caretPosition, text.length()); i++) {
-                                if (text.charAt(i) == '.')
-                                    dotsBefore++;
+                                if (text.charAt(i) == '.') dotsBefore++;
                             }
                             int digitsBefore = Math.min(caretPosition, text.length()) - dotsBefore;
                             txtDonGia.setText(formattedText);
@@ -360,21 +357,9 @@ public class JFSanPham extends JFrame {
                     }
                 });
             }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                performFormatting();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                performFormatting();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                performFormatting();
-            }
+            @Override public void insertUpdate(DocumentEvent e) { performFormatting(); }
+            @Override public void removeUpdate(DocumentEvent e) { performFormatting(); }
+            @Override public void changedUpdate(DocumentEvent e) { performFormatting(); }
         });
 
         txtSoLuong = createTextField("10");
@@ -384,25 +369,21 @@ public class JFSanPham extends JFrame {
         JPanel pnlBrandCat = new JPanel(new GridLayout(1, 2, 20, 0));
         pnlBrandCat.setBackground(util.TechStoreUI.CARD_BG);
         txtHangSX = createTextField("Apple, Samsung...");
-
+        
         cboLoaiSP = new JComboBox<>();
         cboLoaiSP.setFont(mainFont);
         cboLoaiSP.setPreferredSize(new Dimension(200, 38));
         cboLoaiSP.setBackground(util.TechStoreUI.CARD_BG);
-
+        
         pnlBrandCat.add(wrapWithLabel("Hãng Sản Xuất *", txtHangSX));
         pnlBrandCat.add(wrapWithLabel("Phân Loại SP *", cboLoaiSP));
 
         int gridy = 0;
-        gbc.gridy = gridy++;
-        pnlLeft.add(wrapWithLabel("Mã Sản Phẩm *", txtMaSP), gbc);
-        gbc.gridy = gridy++;
-        pnlLeft.add(wrapWithLabel("Tên Sản Phẩm *", txtTenSP), gbc);
-        gbc.gridy = gridy++;
-        pnlLeft.add(pnlPriceQty, gbc);
-        gbc.gridy = gridy++;
-        pnlLeft.add(pnlBrandCat, gbc);
-
+        gbc.gridy = gridy++; pnlLeft.add(wrapWithLabel("Mã Sản Phẩm *", txtMaSP), gbc);
+        gbc.gridy = gridy++; pnlLeft.add(wrapWithLabel("Tên Sản Phẩm *", txtTenSP), gbc);
+        gbc.gridy = gridy++; pnlLeft.add(pnlPriceQty, gbc);
+        gbc.gridy = gridy++; pnlLeft.add(pnlBrandCat, gbc);
+        
         gbc.gridy = gridy++;
         gbc.weighty = 1.0;
         pnlLeft.add(Box.createVerticalGlue(), gbc);
@@ -416,19 +397,19 @@ public class JFSanPham extends JFrame {
         GridBagConstraints gbcAct = new GridBagConstraints();
         gbcAct.fill = GridBagConstraints.BOTH;
         gbcAct.weighty = 1.0;
-
+        
         btnXoa = new JButton("Xóa SP");
         styleButton(btnXoa, new Color(254, 242, 242), new Color(225, 29, 72), "roundRect");
         btnXoa.setVisible(false);
         btnXoa.setPreferredSize(new Dimension(0, 42));
 
         btnLamMoi = new JButton("Làm Mới Form");
-        styleButton(btnLamMoi, util.TechStoreUI.BG_MAIN, util.TechStoreUI.TEXT_MUTED, "roundRect");
+        styleButton(btnLamMoi, util.TechStoreUI.BG_MAIN, new Color(71, 85, 105), "roundRect");
         btnLamMoi.setPreferredSize(new Dimension(0, 42));
 
         btnLuu = new JButton("Thêm Mới");
         styleButton(btnLuu, new Color(79, 70, 229), Color.WHITE, "roundRect");
-        btnLuu.setPreferredSize(new Dimension(0, 48));
+        btnLuu.setPreferredSize(new Dimension(0, 48)); 
 
         gbcAct.gridy = 0;
         gbcAct.gridx = 0;
@@ -452,6 +433,7 @@ public class JFSanPham extends JFrame {
         gbc.insets = new Insets(0, 0, 0, 0);
         pnlLeft.add(pnlActions, gbc);
 
+
         JPanel pnlMiddle = new JPanel(new BorderLayout(0, 20));
         pnlMiddle.setBackground(util.TechStoreUI.CARD_BG);
 
@@ -459,13 +441,13 @@ public class JFSanPham extends JFrame {
         txtMoTa.setFont(mainFont);
         txtMoTa.setLineWrap(true);
         txtMoTa.setWrapStyleWord(true);
-        txtMoTa.putClientProperty("JTextField.placeholderText",
-                "Nhập chi tiết về thông số kỹ thuật, bảo hành, tính năng nổi bật...");
-
+        txtMoTa.putClientProperty("JTextField.placeholderText", "Nhập chi tiết về thông số kỹ thuật, bảo hành, tính năng nổi bật...");
+        
         JScrollPane scrollMoTa = new JScrollPane(txtMoTa);
         scrollMoTa.setBorder(BorderFactory.createLineBorder(new Color(203, 213, 225)));
-
+        
         pnlMiddle.add(wrapWithLabel("Mô Tả Chi Tiết", scrollMoTa), BorderLayout.CENTER);
+
 
         JPanel pnlRight = new JPanel(new BorderLayout());
         pnlRight.setBackground(util.TechStoreUI.CARD_BG);
@@ -475,18 +457,16 @@ public class JFSanPham extends JFrame {
         pnlImageContainer.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createDashedBorder(new Color(203, 213, 225), 2.0f, 5.0f, 2.0f, true),
                 new EmptyBorder(10, 10, 10, 10)));
-        pnlImageContainer.setPreferredSize(new Dimension(300, 300));
+        pnlImageContainer.setPreferredSize(new Dimension(300, 300)); 
 
-        lblHinh = new JLabel(
-                "<html><div style='text-align: center;'><b style='color: #475569;'>Nhấn chọn hoặc kéo thả ảnh</b></div></html>",
-                SwingConstants.CENTER);
+        lblHinh = new JLabel("<html><div style='text-align: center;'><b style='color: #475569;'>Nhấn chọn hoặc kéo thả ảnh</b></div></html>", SwingConstants.CENTER);
         pnlImageContainer.add(lblHinh, BorderLayout.CENTER);
 
         JPanel pnlImageBtn = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         pnlImageBtn.setBackground(util.TechStoreUI.CARD_BG);
         btnChonAnh = new JButton("Chọn Ảnh Sản Phẩm");
-        styleButton(btnChonAnh, util.TechStoreUI.BG_MAIN, util.TechStoreUI.TEXT_MUTED, "roundRect");
-        btnChonAnh.setPreferredSize(new Dimension(200, 42));
+        styleButton(btnChonAnh, util.TechStoreUI.BG_MAIN, new Color(71, 85, 105), "roundRect");
+        btnChonAnh.setPreferredSize(new Dimension(200, 42)); 
         pnlImageBtn.add(btnChonAnh);
 
         JPanel pnlImageWrapper = new JPanel(new BorderLayout(0, 12));
@@ -500,22 +480,23 @@ public class JFSanPham extends JFrame {
 
         pnlRight.add(pnlRightTop, BorderLayout.CENTER);
 
+
         JPanel pnlFormBody = new JPanel(new GridLayout(1, 3, 35, 0));
         pnlFormBody.setBackground(util.TechStoreUI.CARD_BG);
         pnlFormBody.setBorder(new EmptyBorder(10, 0, 0, 0));
         pnlFormBody.add(pnlLeft);
-        pnlFormBody.add(pnlMiddle);
-        pnlFormBody.add(pnlRight);
-
+        pnlFormBody.add(pnlMiddle); 
+        pnlFormBody.add(pnlRight);  
+        
         pnlFormContainer.add(pnlFormBody, BorderLayout.CENTER);
-        pnlFormWrapper.add(pnlFormContainer, BorderLayout.CENTER);
+        pnlFormWrapper.add(pnlFormContainer, BorderLayout.CENTER); 
 
         tabMain.addTab("  Danh Sách Sản Phẩm  ", pnlTableContainer);
         tabMain.addTab("  Chỉnh Sửa / Thêm Mới  ", pnlFormWrapper);
 
         pnlMain.add(tabMain, BorderLayout.CENTER);
         add(pnlMain, BorderLayout.CENTER);
-
+        
         btnThemMoiTab.addActionListener(e -> {
             clearForm();
             tabMain.setSelectedIndex(1);
@@ -527,7 +508,7 @@ public class JFSanPham extends JFrame {
         p.setBackground(util.TechStoreUI.CARD_BG);
         JLabel lbl = new JLabel(labelText);
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lbl.setForeground(util.TechStoreUI.TEXT_MUTED);
+        lbl.setForeground(new Color(71, 85, 105));
         p.add(lbl, BorderLayout.NORTH);
         p.add(component, BorderLayout.CENTER);
         return p;
@@ -550,7 +531,7 @@ public class JFSanPham extends JFrame {
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.putClientProperty("JButton.buttonType", type);
-
+        
         // Cấu hình bắt buộc để hiện màu nền trên giao diện Windows/System
         btn.setOpaque(true);
         btn.setContentAreaFilled(true);
@@ -558,8 +539,7 @@ public class JFSanPham extends JFrame {
             if (UIManager.getLookAndFeel() != null && !UIManager.getLookAndFeel().getName().contains("FlatLaf")) {
                 btn.setBorderPainted(false); // Xóa viền mặc định che mất màu
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     private void styleTabButton(JToggleButton btn, Color selectedColor) {
@@ -574,13 +554,12 @@ public class JFSanPham extends JFrame {
         btn.setContentAreaFilled(true);
         try {
             if (UIManager.getLookAndFeel() != null && !UIManager.getLookAndFeel().getName().contains("FlatLaf")) {
-                btn.setBorderPainted(false);
+                btn.setBorderPainted(false); 
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         btn.setBackground(util.TechStoreUI.BG_MAIN);
-        btn.setForeground(util.TechStoreUI.TEXT_MUTED);
+        btn.setForeground(new Color(71, 85, 105));
         btn.setBorder(BorderFactory.createLineBorder(util.TechStoreUI.BORDER, 1));
 
         btn.addChangeListener(e -> {
@@ -590,7 +569,7 @@ public class JFSanPham extends JFrame {
                 btn.setBorder(BorderFactory.createLineBorder(selectedColor, 1));
             } else {
                 btn.setBackground(util.TechStoreUI.BG_MAIN);
-                btn.setForeground(util.TechStoreUI.TEXT_MUTED);
+                btn.setForeground(new Color(71, 85, 105));
                 btn.setBorder(BorderFactory.createLineBorder(util.TechStoreUI.BORDER, 1));
             }
         });
@@ -745,93 +724,49 @@ public class JFSanPham extends JFrame {
     }
 
     // Getters
-    public JTabbedPane getTabMain() {
-        return tabMain;
-    }
+    public JTabbedPane getTabMain() { return tabMain; }
+    
+    public JTextField getTxtMaSP() { return txtMaSP; }
 
-    public JTextField getTxtMaSP() {
-        return txtMaSP;
-    }
+    public JTextField getTxtTenSP() { return txtTenSP; }
 
-    public JTextField getTxtTenSP() {
-        return txtTenSP;
-    }
+    public JTextField getTxtDonGia() { return txtDonGia; }
 
-    public JTextField getTxtDonGia() {
-        return txtDonGia;
-    }
+    public JTextField getTxtSoLuong() { return txtSoLuong; }
 
-    public JTextField getTxtSoLuong() {
-        return txtSoLuong;
-    }
+    public JTextField getTxtHangSX() { return txtHangSX; }
 
-    public JTextField getTxtHangSX() {
-        return txtHangSX;
-    }
+    public JTextField getTxtTimKiem() { return txtTimKiem; }
 
-    public JTextField getTxtTimKiem() {
-        return txtTimKiem;
-    }
+    public JTextArea getTxtMoTa() { return txtMoTa; }
 
-    public JTextArea getTxtMoTa() {
-        return txtMoTa;
-    }
+    public JComboBox<LoaiSP> getCboLoaiSP() { return cboLoaiSP; }
 
-    public JComboBox<LoaiSP> getCboLoaiSP() {
-        return cboLoaiSP;
-    }
+    public JLabel getLblHinh() { return lblHinh; }
 
-    public JLabel getLblHinh() {
-        return lblHinh;
-    }
+    public JButton getBtnLuu() { return btnLuu; }
 
-    public JButton getBtnLuu() {
-        return btnLuu;
-    }
+    public JButton getBtnXoa() { return btnXoa; }
 
-    public JButton getBtnXoa() {
-        return btnXoa;
-    }
+    public JButton getBtnLamMoi() { return btnLamMoi; }
 
-    public JButton getBtnLamMoi() {
-        return btnLamMoi;
-    }
+    public JButton getBtnChonAnh() { return btnChonAnh; }
 
-    public JButton getBtnChonAnh() {
-        return btnChonAnh;
-    }
+    public JButton getBtnTimKiem() { return btnTimKiem; }
 
-    public JButton getBtnTimKiem() {
-        return btnTimKiem;
-    }
+    public JButton getBtnMoBoLoc() { return btnMoBoLoc; }
 
-    public JButton getBtnMoBoLoc() {
-        return btnMoBoLoc;
-    }
+    public JToggleButton getBtnTabAll() { return btnTabAll; }
 
-    public JToggleButton getBtnTabAll() {
-        return btnTabAll;
-    }
+    public JToggleButton getBtnTabDienThoai() { return btnTabDienThoai; }
 
-    public JToggleButton getBtnTabDienThoai() {
-        return btnTabDienThoai;
-    }
+    public JToggleButton getBtnTabLaptop() { return btnTabLaptop; }
 
-    public JToggleButton getBtnTabLaptop() {
-        return btnTabLaptop;
-    }
+    public JToggleButton getBtnTabPhuKien() { return btnTabPhuKien; }
 
-    public JToggleButton getBtnTabPhuKien() {
-        return btnTabPhuKien;
-    }
+    public JTable getTblSanPham() { return tblSanPham; }
 
-    public JTable getTblSanPham() {
-        return tblSanPham;
-    }
-
-    public DefaultTableModel getModel() {
-        return model;
-    }
+    public DefaultTableModel getModel() { return model; }
 
     public static void main(String[] args) {
         try {

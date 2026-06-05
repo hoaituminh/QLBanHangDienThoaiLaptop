@@ -70,7 +70,7 @@ public class JFMenu extends JFrame {
                       "Quản Lý Khách Hàng (JFKhachHang)",         "Đối tác",     false),
         new MenuEntry("Quản Lý Nhân Viên",    "NV", "NhanVien",
                       "Quản Lý Nhân Sự (JFNhanVien)",             "Nhân viên",   false),
-        new MenuEntry("Quản Lý Tài Khoản",    "TQ", "TaiKhoan",
+        new MenuEntry("Quản Lý Tài Khoản",    "TK", "TaiKhoan",
                       "Phân Quyền & Quản Lý Tài Khoản (JFTaiKhoan)", "Bảo mật", false),
     };
 
@@ -82,15 +82,19 @@ public class JFMenu extends JFrame {
     private final Color violet600    = new Color(124, 58, 237);
     private final Color textMuted    = new Color(100, 116, 139);
     private final Color textNormal   = new Color(148, 163, 184);
-    private final Color bgMain       = new Color(241, 245, 249);
     private final Color emerald400   = new Color(52,  211, 153);
 
     // ──────────────────────────────────────────────────────────────────────────
     public JFMenu(String userName, String userRole) {
+        this(userName, userRole, 0);
+    }
+
+    private JFMenu(String userName, String userRole, int initialActiveIdx) {
         // Lưu thông tin người dùng đăng nhập
         this.loggedInName = (userName != null && !userName.isEmpty()) ? userName : "Người dùng";
         this.loggedInRole = (userRole != null && !userRole.isEmpty()) ? userRole.toUpperCase() : "USER";
         this.loggedInInitials = buildInitials(this.loggedInName);
+        this.activeIdx = Math.max(0, Math.min(initialActiveIdx, ENTRIES.length - 1));
 
         setTitle("Phần Mềm Quản Lý Bán Hàng - TechStore");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -474,14 +478,14 @@ addWindowFocusListener(new WindowAdapter() {
     // ══════════════════════════════════════════════════════════════════════════
     private void buildMainContent() {
         pnlContent = new JPanel(new BorderLayout());
-        pnlContent.setBackground(bgMain);
+        pnlContent.setBackground(util.TechStoreUI.BG_MAIN);
 
         // Header
         JPanel pnlHeader = new JPanel(new BorderLayout());
-        pnlHeader.setBackground(Color.WHITE);
+        pnlHeader.setBackground(util.TechStoreUI.CARD_BG);
         pnlHeader.setPreferredSize(new Dimension(0, 64));
         pnlHeader.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(226, 232, 240)),
+            BorderFactory.createMatteBorder(0, 0, 1, 0, util.TechStoreUI.BORDER),
             new EmptyBorder(15, 24, 0, 24)
         ));
 
@@ -489,13 +493,13 @@ addWindowFocusListener(new WindowAdapter() {
         pnlTitleGroup.setOpaque(false);
         lblTitle = new JLabel("Trang Chủ");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 17));
-        lblTitle.setForeground(new Color(30, 41, 59));
+        lblTitle.setForeground(util.TechStoreUI.TEXT_TITLE);
 
         lblHeaderTag = new JLabel("Hệ Thống Live");
         lblHeaderTag.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblHeaderTag.setForeground(new Color(67, 56, 202));
+        lblHeaderTag.setForeground(util.TechStoreUI.INDIGO);
         lblHeaderTag.setOpaque(true);
-        lblHeaderTag.setBackground(new Color(238, 242, 255));
+        lblHeaderTag.setBackground(util.TechStoreUI.INDIGO_LIGHT);
         lblHeaderTag.setBorder(BorderFactory.createEmptyBorder(3, 10, 3, 10));
 
         pnlTitleGroup.add(lblTitle);
@@ -505,10 +509,10 @@ addWindowFocusListener(new WindowAdapter() {
         pnlHeaderRight.setOpaque(false);
         JLabel lblClockLbl = new JLabel("Giờ hệ thống:");
         lblClockLbl.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblClockLbl.setForeground(textMuted);
+        lblClockLbl.setForeground(util.TechStoreUI.TEXT_MUTED);
         JLabel lblClock = new JLabel();
         lblClock.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        lblClock.setForeground(new Color(51, 65, 85));
+        lblClock.setForeground(util.TechStoreUI.TEXT_TITLE);
         Timer timer = new Timer(1000, e -> {
             lblClock.setText(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
         });
@@ -516,13 +520,62 @@ addWindowFocusListener(new WindowAdapter() {
         pnlHeaderRight.add(lblClockLbl);
         pnlHeaderRight.add(lblClock);
 
+        // Divider
+        JPanel div = new JPanel();
+        div.setBackground(util.TechStoreUI.BORDER);
+        div.setPreferredSize(new Dimension(1, 24));
+        pnlHeaderRight.add(div);
+
+        // Theme Toggle Button
+        JButton btnTheme = new JButton();
+        btnTheme.setPreferredSize(new Dimension(36, 36));
+        btnTheme.setFocusPainted(false);
+        btnTheme.setContentAreaFilled(false);
+        btnTheme.setBorderPainted(false);
+        btnTheme.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        boolean isDark = util.TechStoreUI.isDarkMode();
+        btnTheme.setText(isDark ? "\u2600" : "\u263E");
+        btnTheme.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
+        btnTheme.setForeground(isDark ? new Color(250, 204, 21) : new Color(100, 116, 139));
+        
+        btnTheme.addMouseListener(new MouseAdapter() {
+            @Override public void mouseEntered(MouseEvent e) {
+                btnTheme.setOpaque(true);
+                btnTheme.setBackground(util.TechStoreUI.isDarkMode() ? new Color(30, 41, 59) : util.TechStoreUI.BG_MAIN);
+                btnTheme.repaint();
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                btnTheme.setOpaque(false);
+                btnTheme.repaint();
+            }
+        });
+        
+        btnTheme.addActionListener(e -> {
+            boolean nextDark = !util.TechStoreUI.isDarkMode();
+            util.TechStoreUI.installLookAndFeel(nextDark);
+            int currentIdx = activeIdx;
+            // Khởi động lại JFMenu để áp dụng theme mới
+            SwingUtilities.invokeLater(() -> {
+                JFMenu newMenu = new JFMenu(loggedInName, loggedInRole, currentIdx);
+                newMenu.setExtendedState(getExtendedState());
+                if ((getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
+                    newMenu.setSize(getSize());
+                    newMenu.setLocation(getLocation());
+                }
+                newMenu.setVisible(true);
+                JFMenu.this.dispose();
+            });
+        });
+        
+        pnlHeaderRight.add(btnTheme);
+
         pnlHeader.add(pnlTitleGroup,  BorderLayout.WEST);
         pnlHeader.add(pnlHeaderRight, BorderLayout.EAST);
 
         // Cards
         cardLayout = new CardLayout();
         pnlCards   = new JPanel(cardLayout);
-        pnlCards.setBackground(bgMain);
+        pnlCards.setBackground(util.TechStoreUI.BG_MAIN);
 
         pnlContent.add(pnlHeader, BorderLayout.NORTH);
         pnlContent.add(pnlCards,  BorderLayout.CENTER);
@@ -619,8 +672,8 @@ addWindowFocusListener(new WindowAdapter() {
             JFKhachHang frmKH = new JFKhachHang();
             KhachHangController khCtrl = new KhachHangController(frmKH);
             pnlCards.add(wrapFormContent(frmKH.getContentPane()), "KhachHang");
-            frmKH.setContentPane(new JPanel()); // ← TRẢ PANE RỖNG, diệt zombie
-            reloadMap.put("KhachHang", () -> invokeLoadData(khCtrl)); // ← chỉ thêm dòng này
+            frmKH.setContentPane(new JPanel());
+            reloadMap.put("KhachHang", () -> invokeLoadData(khCtrl));
         } catch (Exception ex) {
             pnlCards.add(createPlaceholder("Lỗi nạp form Khách Hàng"), "KhachHang");
         }
@@ -628,18 +681,17 @@ addWindowFocusListener(new WindowAdapter() {
             JFNhanVien frmNV = new JFNhanVien();
             NhanVienController nvCtrl = new NhanVienController(frmNV);
             pnlCards.add(wrapFormContent(frmNV.getContentPane()), "NhanVien");
-            frmNV.setContentPane(new JPanel()); // ← TRẢ PANE RỖNG, diệt zombie
-           reloadMap.put("NhanVien",  () -> invokeLoadData(nvCtrl)); // ← chỉ thêm dòng này
+            frmNV.setContentPane(new JPanel());
+            reloadMap.put("NhanVien", () -> invokeLoadData(nvCtrl));
         } catch (Exception ex) {
             pnlCards.add(createPlaceholder("Lỗi nạp form Nhân Viên"), "NhanVien");
         }
         try {
             JFTaiKhoan frmTK = new JFTaiKhoan();
             TaiKhoanController tkCtrl = new TaiKhoanController(frmTK);
-            tkCtrl.setCurrentUsername(util.UserSession.getUsername());
             pnlCards.add(wrapFormContent(frmTK.getContentPane()), "TaiKhoan");
-            frmTK.setContentPane(new JPanel()); // ← TRẢ PANE RỖNG, diệt zombie
-            reloadMap.put("TaiKhoan",  () -> invokeLoadData(tkCtrl)); // ← chỉ thêm dòng này
+            frmTK.setContentPane(new JPanel());
+            reloadMap.put("TaiKhoan", () -> invokeLoadData(tkCtrl));
         } catch (Exception ex) {
             pnlCards.add(createPlaceholder("Lỗi nạp form Tài Khoản"), "TaiKhoan");
         }
@@ -647,24 +699,20 @@ addWindowFocusListener(new WindowAdapter() {
 
     private JPanel wrapFormContent(Container content) {
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setBackground(bgMain);
+        wrapper.setBackground(util.TechStoreUI.BG_MAIN);
         wrapper.add(content, BorderLayout.CENTER);
         return wrapper;
     }
 
     private JPanel createPlaceholder(String text) {
         JPanel p = new JPanel(new GridBagLayout());
-        p.setBackground(bgMain);
+        p.setBackground(util.TechStoreUI.BG_MAIN);
         JLabel l = new JLabel(text);
         l.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        l.setForeground(new Color(203, 213, 225));
+        l.setForeground(util.TechStoreUI.TEXT_MUTED);
         p.add(l);
         return p;
     }
-
-    // ══════════════════════════════════════════════════════════════════════════
-    // SHARED BUILDERS
-    // ══════════════════════════════════════════════════════════════════════════
     /** Logo TS với gradient indigo → violet */
     private JPanel buildTSLogo(int w, int h) {
         JPanel box = new JPanel() {

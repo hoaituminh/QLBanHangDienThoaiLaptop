@@ -26,14 +26,14 @@ public class JDFilterSanPham extends JDialog {
         super(parent, "Tất cả bộ lọc", true);
         setSize(650, 500);
         setLocationRelativeTo(parent);
-        getContentPane().setBackground(Color.WHITE);
+        getContentPane().setBackground(util.TechStoreUI.CARD_BG);
         initComponents();
     }
 
     private void initComponents() {
         JPanel pnlMain = new JPanel();
         pnlMain.setLayout(new BoxLayout(pnlMain, BoxLayout.Y_AXIS));
-        pnlMain.setBackground(Color.WHITE);
+        pnlMain.setBackground(util.TechStoreUI.CARD_BG);
         pnlMain.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         // 1. Hãng Sản Xuất (Sẽ được load ĐỘNG từ CSDL)
@@ -42,7 +42,7 @@ public class JDFilterSanPham extends JDialog {
         lblHang.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         pnlBrands = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        pnlBrands.setBackground(Color.WHITE);
+        pnlBrands.setBackground(util.TechStoreUI.CARD_BG);
         pnlBrands.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // 2. Mức Giá (Cố định)
@@ -52,7 +52,7 @@ public class JDFilterSanPham extends JDialog {
         lblGia.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         JPanel pnlPrices = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        pnlPrices.setBackground(Color.WHITE);
+        pnlPrices.setBackground(util.TechStoreUI.CARD_BG);
         pnlPrices.setAlignmentX(Component.LEFT_ALIGNMENT);
         String[] prices = {"Dưới 10 triệu", "10 - 15 triệu", "15 - 20 triệu", "20 - 30 triệu", "Trên 30 triệu"};
         for (String p : prices) {
@@ -68,7 +68,7 @@ public class JDFilterSanPham extends JDialog {
         lblLoai.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         pnlCategories = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        pnlCategories.setBackground(Color.WHITE);
+        pnlCategories.setBackground(util.TechStoreUI.CARD_BG);
         pnlCategories.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Gắn vào panel chính
@@ -86,13 +86,13 @@ public class JDFilterSanPham extends JDialog {
 
         // Footer - Buttons
         JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
-        pnlFooter.setBackground(Color.WHITE);
-        pnlFooter.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(226, 232, 240)));
+        pnlFooter.setBackground(util.TechStoreUI.CARD_BG);
+        pnlFooter.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, util.TechStoreUI.BORDER));
 
         btnBoChon = new JButton("Bỏ chọn");
         btnBoChon.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnBoChon.setPreferredSize(new Dimension(150, 40));
-        btnBoChon.setBackground(Color.WHITE);
+        btnBoChon.setBackground(util.TechStoreUI.CARD_BG);
         btnBoChon.setForeground(new Color(239, 68, 68)); 
         btnBoChon.setBorder(BorderFactory.createLineBorder(new Color(239, 68, 68), 1));
         btnBoChon.setFocusPainted(false);
@@ -140,12 +140,12 @@ public class JDFilterSanPham extends JDialog {
     private JToggleButton createChip(String text) {
         JToggleButton btn = new JToggleButton(text);
         btn.setFont(mainFont);
-        btn.setBackground(Color.WHITE);
+        btn.setBackground(util.TechStoreUI.CARD_BG);
         btn.setForeground(new Color(71, 85, 105));
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+            BorderFactory.createLineBorder(util.TechStoreUI.BORDER, 1),
             new EmptyBorder(8, 15, 8, 15)
         ));
         
@@ -158,10 +158,10 @@ public class JDFilterSanPham extends JDialog {
                     new EmptyBorder(8, 15, 8, 15)
                 ));
             } else {
-                btn.setBackground(Color.WHITE);
+                btn.setBackground(util.TechStoreUI.CARD_BG);
                 btn.setForeground(new Color(71, 85, 105));
                 btn.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+                    BorderFactory.createLineBorder(util.TechStoreUI.BORDER, 1),
                     new EmptyBorder(8, 15, 8, 15)
                 ));
             }

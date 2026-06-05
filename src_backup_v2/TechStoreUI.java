@@ -131,7 +131,7 @@ public final class TechStoreUI {
         JLabel l = new JLabel(" " + text + " ");
         l.setOpaque(true);
         l.setBackground(INDIGO_LIGHT);
-        l.setForeground(darkMode ? new Color(199, 210, 254) : new Color(67, 56, 202));
+        l.setForeground(new Color(67, 56, 202));
         l.setFont(new Font("Segoe UI", Font.BOLD, 11));
         return l;
     }
@@ -151,10 +151,6 @@ public final class TechStoreUI {
         JTextField txt = new JTextField();
         txt.setFont(FONT_MAIN);
         txt.setBackground(FIELD_BG);
-        txt.setForeground(TEXT_TITLE);
-        txt.setCaretColor(TEXT_TITLE);
-        txt.setSelectionColor(darkMode ? new Color(67, 56, 202) : new Color(199, 210, 254));
-        txt.setSelectedTextColor(Color.WHITE);
         
         boolean isFlatLaf = UIManager.getLookAndFeel().getClass().getName().contains("Flat");
         if (isFlatLaf) {
@@ -193,8 +189,8 @@ public final class TechStoreUI {
     public static void styleSecondaryButton(JButton btn, String text) {
         btn.setText(text);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btn.setForeground(TEXT_MUTED);
-        btn.setBackground(CARD_BG);
+        btn.setForeground(new Color(71, 85, 105));
+        btn.setBackground(new Color(241, 245, 249));
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setMargin(new Insets(8, 16, 8, 16));
@@ -329,10 +325,7 @@ public final class TechStoreUI {
         table.setRowHeight(36);
         table.setShowGrid(false);
         table.setIntercellSpacing(new Dimension(0, 0));
-        table.setBackground(CARD_BG);
-        table.setForeground(TEXT_TITLE);
-        table.setGridColor(BORDER);
-        table.setSelectionBackground(darkMode ? new Color(49, 46, 129) : new Color(238, 242, 255));
+        table.setSelectionBackground(new Color(238, 242, 255));
         table.setSelectionForeground(TEXT_TITLE);
         JTableHeader h = table.getTableHeader();
         h.setFont(new Font("Segoe UI", Font.BOLD, 12));
@@ -353,10 +346,6 @@ public final class TechStoreUI {
         icon.setForeground(TEXT_MUTED);
         field.setFont(FONT_SM);
         field.setBackground(FIELD_BG);
-        field.setForeground(TEXT_TITLE);
-        field.setCaretColor(TEXT_TITLE);
-        field.setSelectionColor(darkMode ? new Color(67, 56, 202) : new Color(199, 210, 254));
-        field.setSelectedTextColor(Color.WHITE);
 
         boolean isFlatLaf = UIManager.getLookAndFeel().getClass().getName().contains("Flat");
         if (isFlatLaf) {

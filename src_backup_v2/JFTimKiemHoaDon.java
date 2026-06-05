@@ -113,11 +113,11 @@ public class JFTimKiemHoaDon extends JDialog {
         
         JLabel lblTitle = new JLabel("Lịch Sử & Tìm Kiếm Hóa Đơn");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22)); // Font chữ to, đậm nét chuyên nghiệp
-        lblTitle.setForeground(util.TechStoreUI.TEXT_TITLE); // Động theo theme
+        lblTitle.setForeground(new Color(15, 23, 42)); // Màu chữ đen Slate 900 cực sâu
         
         JLabel lblSub = new JLabel("Tra cứu nhanh toàn bộ lịch sử bán hàng hệ thống");
         lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        lblSub.setForeground(util.TechStoreUI.TEXT_MUTED); // Động theo theme
+        lblSub.setForeground(new Color(100, 116, 139)); // Màu xám nhạt Slate 500 tinh tế
         
         pnlHeader.add(lblTitle);
         pnlHeader.add(lblSub);
@@ -172,7 +172,7 @@ public class JFTimKiemHoaDon extends JDialog {
         
         tblHoaDon.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
         tblHoaDon.getTableHeader().setBackground(util.TechStoreUI.BG_MAIN); // Nền header xám mịn
-        tblHoaDon.getTableHeader().setForeground(util.TechStoreUI.TEXT_MUTED); // Động theo theme
+        tblHoaDon.getTableHeader().setForeground(new Color(71, 85, 105)); // Chữ header xám trung tính
         tblHoaDon.getTableHeader().setPreferredSize(new Dimension(0, 35));
 
         tblHoaDon.getColumnModel().getColumn(COL_TONG).setCellRenderer(rightRenderer());
@@ -186,7 +186,7 @@ public class JFTimKiemHoaDon extends JDialog {
 
         lblEmpty = new JLabel("Không tìm thấy hóa đơn nào khớp với bộ lọc tra cứu!", SwingConstants.CENTER);
         lblEmpty.setFont(new Font("Segoe UI", Font.ITALIC, 13));
-        lblEmpty.setForeground(util.TechStoreUI.TEXT_MUTED);
+        lblEmpty.setForeground(new Color(148, 163, 184));
         lblEmpty.setBorder(new EmptyBorder(10, 0, 10, 0));
         lblEmpty.setVisible(false);
 
@@ -241,7 +241,7 @@ public class JFTimKiemHoaDon extends JDialog {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
-            setBackground(isSelected ? table.getSelectionBackground() : TechStoreUI.CARD_BG);
+            setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
             return this;
         }
     }

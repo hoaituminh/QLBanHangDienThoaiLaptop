@@ -62,7 +62,7 @@ public class JFTaiKhoan extends JFrame {
         txtUsername = TechStoreUI.createField("Tên đăng nhập viết liền không dấu");
         txtPassword = new JPasswordField();
         txtPassword.setFont(TechStoreUI.FONT_MAIN);
-        txtPassword.setBackground(new Color(248, 250, 252));
+        txtPassword.setBackground(util.TechStoreUI.BG_MAIN);
         txtPassword.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(TechStoreUI.BORDER, 1, true),
                 new EmptyBorder(8, 10, 8, 10)));
@@ -159,7 +159,7 @@ public class JFTaiKhoan extends JFrame {
     public void setEditMode(boolean edit) {
         this.editMode = edit;
         txtUsername.setEditable(!edit);
-        txtUsername.setBackground(edit ? new Color(226, 232, 240) : new Color(248, 250, 252));
+        txtUsername.setBackground(edit ? util.TechStoreUI.BORDER : util.TechStoreUI.BG_MAIN);
         lblFormMode.setText(edit ? " Đang chỉnh sửa " : " Thêm mới ");
         if (edit) {
             TechStoreUI.styleUpdateButton(btnLuu, "Cập Nhật Tài Khoản");

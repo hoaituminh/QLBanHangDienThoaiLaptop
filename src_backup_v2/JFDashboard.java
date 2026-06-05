@@ -240,19 +240,19 @@ public class JFDashboard extends JPanel {
 
         JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        titleLabel.setForeground(util.TechStoreUI.TEXT_MUTED);
+        titleLabel.setForeground(new Color(148, 163, 184));
         gbc.gridy = 0;
         textContainer.add(titleLabel, gbc);
 
         JLabel valueLabel = new JLabel(value);
         valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        valueLabel.setForeground(util.TechStoreUI.TEXT_TITLE);
+        valueLabel.setForeground(textColor);
         gbc.gridy = 1;
         textContainer.add(valueLabel, gbc);
 
         JLabel descLabel = new JLabel(description);
         descLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
-        descLabel.setForeground(util.TechStoreUI.TEXT_MUTED);
+        descLabel.setForeground(new Color(148, 163, 184));
         gbc.gridy = 2;
         textContainer.add(descLabel, gbc);
 
@@ -288,7 +288,7 @@ public class JFDashboard extends JPanel {
         
         JLabel titleLabel = new JLabel("Danh Sách Hóa Đơn Gần Đây (Bảng HOADON)");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        titleLabel.setForeground(util.TechStoreUI.TEXT_TITLE);
+        titleLabel.setForeground(new Color(15, 23, 42));
 
         pnlTitle.add(titleIcon);
         pnlTitle.add(titleLabel);
@@ -310,7 +310,7 @@ public class JFDashboard extends JPanel {
 
         tblHoaDonGanDay.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
         tblHoaDonGanDay.getTableHeader().setBackground(util.TechStoreUI.BG_MAIN);
-        tblHoaDonGanDay.getTableHeader().setForeground(util.TechStoreUI.TEXT_MUTED);
+        tblHoaDonGanDay.getTableHeader().setForeground(new Color(71, 85, 105));
         tblHoaDonGanDay.getTableHeader().setPreferredSize(new Dimension(0, 35));
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -348,7 +348,7 @@ public class JFDashboard extends JPanel {
 
         JLabel titleLabel = new JLabel("Sản Phẩm Bán Chạy Nhất");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        titleLabel.setForeground(util.TechStoreUI.TEXT_TITLE);
+        titleLabel.setForeground(new Color(15, 23, 42));
 
         pnlTitle.add(titleIcon);
         pnlTitle.add(titleLabel);
@@ -370,7 +370,7 @@ public class JFDashboard extends JPanel {
 
         tblTopSanPham.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
         tblTopSanPham.getTableHeader().setBackground(util.TechStoreUI.BG_MAIN);
-        tblTopSanPham.getTableHeader().setForeground(util.TechStoreUI.TEXT_MUTED);
+        tblTopSanPham.getTableHeader().setForeground(new Color(71, 85, 105));
         tblTopSanPham.getTableHeader().setPreferredSize(new Dimension(0, 35));
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();

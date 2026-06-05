@@ -233,16 +233,17 @@ public class JFLapHoaDon extends JFrame {
             }
         };
         tblChiTiet = new JTable(model);
-        util.TechStoreUI.styleTable(tblChiTiet);
         tblChiTiet.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         tblChiTiet.setRowHeight(36);
         tblChiTiet.setShowGrid(false);
         tblChiTiet.setIntercellSpacing(new Dimension(0, 0));
+        tblChiTiet.setSelectionBackground(new Color(238, 242, 255));
+        tblChiTiet.setSelectionForeground(new Color(30, 41, 59));
 
         JTableHeader header = tblChiTiet.getTableHeader();
         header.setFont(smallBold);
         header.setBackground(util.TechStoreUI.BG_MAIN);
-        header.setForeground(util.TechStoreUI.TEXT_MUTED);
+        header.setForeground(new Color(100, 116, 139));
         header.setPreferredSize(new Dimension(0, 36));
         header.setReorderingAllowed(false);
 
@@ -448,7 +449,7 @@ public class JFLapHoaDon extends JFrame {
         group.setOpaque(false);
         JLabel lbl = new JLabel(label);
         lbl.setFont(labelFont);
-        lbl.setForeground(util.TechStoreUI.TEXT_MUTED);
+        lbl.setForeground(new Color(100, 116, 139));
         group.add(lbl, BorderLayout.NORTH);
         group.add(field, BorderLayout.CENTER);
         return group;
@@ -460,7 +461,7 @@ public class JFLapHoaDon extends JFrame {
         row.setBorder(new EmptyBorder(8, 10, 8, 10));
         JLabel lbl = new JLabel(label);
         lbl.setFont(labelFont);
-        lbl.setForeground(util.TechStoreUI.TEXT_MUTED);
+        lbl.setForeground(new Color(100, 116, 139));
         row.add(lbl, BorderLayout.WEST);
         row.add(value, BorderLayout.EAST);
         return row;
@@ -469,7 +470,7 @@ public class JFLapHoaDon extends JFrame {
     private JLabel createPreviewValue(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(boldFont);
-        lbl.setForeground(util.TechStoreUI.TEXT_TITLE);
+        lbl.setForeground(new Color(30, 41, 59));
         return lbl;
     }
 
@@ -489,7 +490,7 @@ public class JFLapHoaDon extends JFrame {
         JTextField txt = createInputField();
         txt.setEditable(false);
         txt.setBackground(util.TechStoreUI.BG_MAIN);
-        txt.setForeground(util.TechStoreUI.TEXT_TITLE);
+        txt.setForeground(new Color(51, 65, 85));
         return txt;
     }
 

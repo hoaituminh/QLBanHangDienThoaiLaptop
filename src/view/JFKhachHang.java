@@ -139,7 +139,7 @@ public class JFKhachHang extends JFrame {
     public void setEditMode(boolean edit) {
         this.editMode = edit;
         txtMaKH.setEditable(!edit);
-        txtMaKH.setBackground(edit ? new Color(226, 232, 240) : new Color(248, 250, 252));
+        txtMaKH.setBackground(edit ? util.TechStoreUI.BORDER : util.TechStoreUI.BG_MAIN);
         lblFormMode.setText(edit ? " Đang chỉnh sửa " : " Đang thêm mới ");
         if (edit) {
             TechStoreUI.styleUpdateButton(btnLuu, "Cập Nhật Khách Hàng");

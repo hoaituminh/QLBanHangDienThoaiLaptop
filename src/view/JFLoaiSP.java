@@ -38,7 +38,7 @@ public class JFLoaiSP extends JFrame {
 
         // --- PANEL FORM (Nhập liệu) ---
         JPanel pnlForm = new JPanel(new GridBagLayout());
-        pnlForm.setBackground(Color.WHITE);
+        pnlForm.setBackground(util.TechStoreUI.CARD_BG);
         pnlForm.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(100, 149, 237), 2), 
                 "Thông Tin Loại Sản Phẩm", TitledBorder.LEFT, TitledBorder.TOP, boldFont, new Color(25, 25, 112)));
@@ -91,7 +91,7 @@ public class JFLoaiSP extends JFrame {
         scrollTable.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(new Color(100, 149, 237), 2), 
                 "Danh Sách Phân Loại", TitledBorder.LEFT, TitledBorder.TOP, boldFont, new Color(25, 25, 112)));
-        scrollTable.getViewport().setBackground(Color.WHITE);
+        scrollTable.getViewport().setBackground(util.TechStoreUI.CARD_BG);
 
         // --- PANEL CHỨC NĂNG ---
         btnThem = new JButton("Thêm Mới");
