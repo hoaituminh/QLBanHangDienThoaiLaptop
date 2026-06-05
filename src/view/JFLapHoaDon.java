@@ -27,7 +27,7 @@ public class JFLapHoaDon extends JFrame {
     private JTextField txtSoLuong;
     private JButton btnTangSL, btnGiamSL; // Thêm 2 nút Tăng/Giảm số lượng mới
     private JLabel lblPreviewDonGia, lblPreviewThanhTien;
-    private JButton btnThemSP, btnSuaSL, btnXoaSP;
+    private JButton btnThemSP, btnGioHang, btnSuaSL, btnXoaSP;
     private JTable tblChiTiet;
     private DefaultTableModel model;
     private JPanel pnlEmptyCart;
@@ -202,6 +202,13 @@ public class JFLapHoaDon extends JFrame {
 
         btnThemSP = new JButton("Thêm Sản Phẩm");
         styleButton(btnThemSP, new Color(37, 99, 235), 13);
+        btnGioHang = new JButton("Giỏ hàng");
+        styleButton(btnGioHang, new Color(79, 70, 229), 13);
+
+        JPanel pnlAddActions = new JPanel(new GridLayout(1, 2, 8, 0));
+        pnlAddActions.setOpaque(false);
+        pnlAddActions.add(btnGioHang);
+        pnlAddActions.add(btnThemSP);
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.50;
         pnlQuickAdd.add(createFieldGroup("Chọn Sản Phẩm", cboSanPham), gbc);
@@ -209,7 +216,7 @@ public class JFLapHoaDon extends JFrame {
         pnlQuickAdd.add(createFieldGroup("Số Lượng", pnlSoLuongGroup), gbc);
         gbc.gridx = 2; gbc.weightx = 0.28;
         gbc.insets = new Insets(18, 0, 0, 0);
-        pnlQuickAdd.add(btnThemSP, gbc);
+        pnlQuickAdd.add(pnlAddActions, gbc);
 
         body.add(pnlQuickAdd);
         body.add(Box.createVerticalStrut(14));
@@ -617,6 +624,9 @@ private void styleMinusButton(JButton btn) {
     public void updateCartCount(int count) {
         lblCartCount.setText("<html><span style='color:#94a3b8;'>Tổng số sản phẩm:</span>"
                 + " <b style='color:white;'>" + count + " sản phẩm</b></html>");
+        if (btnGioHang != null) {
+            btnGioHang.setText("Giỏ hàng (" + count + ")");
+        }
     }
 
     // --- GETTERS ---
@@ -631,6 +641,7 @@ private void styleMinusButton(JButton btn) {
     public JButton getBtnTangSL() { return btnTangSL; } // Getter nút tăng
     public JButton getBtnGiamSL() { return btnGiamSL; } // Getter nút giảm
     public JButton getBtnThemSP() { return btnThemSP; }
+    public JButton getBtnGioHang() { return btnGioHang; }
     public JButton getBtnSuaSL() { return btnSuaSL; }
     public JButton getBtnXoaSP() { return btnXoaSP; }
     public JTable getTblChiTiet() { return tblChiTiet; }

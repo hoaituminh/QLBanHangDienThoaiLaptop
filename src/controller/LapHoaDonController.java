@@ -2,6 +2,7 @@ package controller;
 
 import dao.HoaDonDAO;
 import dao.KhachHangDAO;
+import dao.LoaiSPDAO;
 import dao.SanPhamDAO;
 import model.ChiTietHoaDon;
 import model.HoaDon;
@@ -9,6 +10,7 @@ import model.KhachHang;
 import model.SanPham;
 import util.UserSession;
 import view.JFInHoaDonPreview;
+import view.JFGioHangSanPham;
 import view.JFLapHoaDon;
 import view.JFTimKiemHoaDon;
 
@@ -41,6 +43,7 @@ public class LapHoaDonController {
     private JFLapHoaDon view;
     private HoaDonDAO hoaDonDAO;
     private KhachHangDAO khachHangDAO;
+    private LoaiSPDAO loaiSPDAO;
     private SanPhamDAO sanPhamDAO;
     private double currentDonGia = 0;
 
@@ -48,6 +51,7 @@ public class LapHoaDonController {
         this.view = view;
         this.hoaDonDAO = new HoaDonDAO();
         this.khachHangDAO = new KhachHangDAO();
+        this.loaiSPDAO = new LoaiSPDAO();
         this.sanPhamDAO = new SanPhamDAO();
         initData();
         initController();
@@ -154,6 +158,7 @@ public class LapHoaDonController {
         });
 
         view.getBtnThemSP().addActionListener(e -> themSanPhamVaoGio());
+        view.getBtnGioHang().addActionListener(e -> moGioHangSanPham());
         view.getBtnSuaSL().addActionListener(e -> suaSoLuong());
         view.getBtnXoaSP().addActionListener(e -> xoaSanPhamKhoiGio());
         view.getBtnTaoMoi().addActionListener(e -> taoMoiHoaDon());
@@ -265,6 +270,16 @@ public class LapHoaDonController {
         dialog.setVisible(true);
     }
 
+    private void moGioHangSanPham() {
+        JFGioHangSanPham dialog = new JFGioHangSanPham(
+                view,
+                sanPhamDAO.getAll(),
+                loaiSPDAO.getAll(),
+                (sp, quantity) -> themSanPhamVaoGio(sp, quantity)
+        );
+        dialog.setVisible(true);
+    }
+
     private void themSanPhamVaoGio() {
         SanPham sp = (SanPham) view.getCboSanPham().getSelectedItem();
         if (sp == null) {
@@ -275,36 +290,43 @@ public class LapHoaDonController {
             if (soLuong <= 0) {
                 throw new NumberFormatException();
             }
-
-            boolean daTonTai = false;
-            for (int i = 0; i < view.getModel().getRowCount(); i++) {
-                if (((String) view.getModel().getValueAt(i, 0)).equals(sp.getMaSP())) {
-                    int sl = (int) view.getModel().getValueAt(i, 3) + soLuong;
-                    double tt = sl * sp.getDonGia();
-                    view.getModel().setValueAt(sl, i, 3);
-                    view.getModel().setValueAt(view.formatVND(tt), i, 4);
-                    daTonTai = true;
-                    break;
-                }
-            }
-
-            if (!daTonTai) {
-                view.getModel().addRow(new Object[]{
-                        sp.getMaSP(),
-                        sp.getTenSP(),
-                        view.formatVND(sp.getDonGia()),
-                        soLuong,
-                        view.formatVND(sp.getDonGia() * soLuong),
-                        ""
-                });
-            }
-            tinhTongTienHoaDon();
+            themSanPhamVaoGio(sp, soLuong);
             view.getTxtSoLuong().setText("1");
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view,
                     "Số lượng phải là số nguyên lớn hơn 0!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void themSanPhamVaoGio(SanPham sp, int soLuong) {
+        if (sp == null || soLuong <= 0) {
+            return;
+        }
+
+        boolean daTonTai = false;
+        for (int i = 0; i < view.getModel().getRowCount(); i++) {
+            if (((String) view.getModel().getValueAt(i, 0)).equals(sp.getMaSP())) {
+                int sl = (int) view.getModel().getValueAt(i, 3) + soLuong;
+                double tt = sl * sp.getDonGia();
+                view.getModel().setValueAt(sl, i, 3);
+                view.getModel().setValueAt(view.formatVND(tt), i, 4);
+                daTonTai = true;
+                break;
+            }
+        }
+
+        if (!daTonTai) {
+            view.getModel().addRow(new Object[]{
+                    sp.getMaSP(),
+                    sp.getTenSP(),
+                    view.formatVND(sp.getDonGia()),
+                    soLuong,
+                    view.formatVND(sp.getDonGia() * soLuong),
+                    ""
+            });
+        }
+        tinhTongTienHoaDon();
     }
 
     private void xoaSanPhamKhoiGio() {
