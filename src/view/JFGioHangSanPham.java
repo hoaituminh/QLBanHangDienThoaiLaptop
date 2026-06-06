@@ -241,7 +241,7 @@ public class JFGioHangSanPham extends JDialog {
     private JPanel createProductCard(SanPham sp) {
         JPanel card = new JPanel(new BorderLayout(0, 6));
         applyCardStyle(card, selectedProducts.containsKey(sp.getMaSP()), false);
-        card.setPreferredSize(new Dimension(280, 240));
+        card.setPreferredSize(new Dimension(280, 268));
         card.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         JCheckBox chkSelect = new JCheckBox();
@@ -256,10 +256,17 @@ public class JFGioHangSanPham extends JDialog {
         icon.setPreferredSize(new Dimension(36, 40));
         icon.setMinimumSize(new Dimension(30, 38));
 
-        JLabel name = new JLabel(toHtmlEllipsis(sp.getTenSP(), 46));
+        JTextArea name = new JTextArea(safe(sp.getTenSP()));
         name.setFont(new Font("Segoe UI", Font.BOLD, 14));
         name.setForeground(util.TechStoreUI.TEXT_TITLE);
+        name.setOpaque(false);
+        name.setEditable(false);
+        name.setFocusable(false);
+        name.setBorder(null);
+        name.setWrapStyleWord(true);
+        name.setLineWrap(true);
         name.setAlignmentX(Component.LEFT_ALIGNMENT);
+        name.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
 
         // CENTER: chỉ icon + tên, dùng glue để đẩy nội dung lên trên
         JPanel center = new JPanel();
@@ -289,6 +296,11 @@ public class JFGioHangSanPham extends JDialog {
         stock.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         stock.setForeground(util.TechStoreUI.isDarkMode() ? new Color(125, 211, 252) : new Color(14, 116, 144));
 
+        JLabel maSPLabel = new JLabel(sp.getMaSP());
+        maSPLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        maSPLabel.setForeground(new Color(148, 163, 184));
+        maSPLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         JLabel category = new JLabel(shortCategoryName(sp.getMaLoai()));
         category.setFont(new Font("Segoe UI", Font.BOLD, 11));
         category.setForeground(new Color(129, 140, 248));
@@ -296,11 +308,12 @@ public class JFGioHangSanPham extends JDialog {
         category.setBackground(new Color(49, 46, 129));
         category.setBorder(new EmptyBorder(2, 6, 2, 6));
 
-        JPanel productFooter = new JPanel(new BorderLayout());
+        JPanel productFooter = new JPanel(new BorderLayout(4, 0));
         productFooter.setOpaque(false);
         productFooter.setAlignmentX(Component.CENTER_ALIGNMENT);
         productFooter.setMaximumSize(new Dimension(Integer.MAX_VALUE, 22));
         productFooter.add(stock, BorderLayout.WEST);
+        productFooter.add(maSPLabel, BorderLayout.CENTER);
         productFooter.add(category, BorderLayout.EAST);
 
         JPanel south = new JPanel();
@@ -317,12 +330,12 @@ public class JFGioHangSanPham extends JDialog {
         card.add(chkSelect, BorderLayout.NORTH);
         card.add(center, BorderLayout.CENTER);
         card.add(south, BorderLayout.SOUTH);
-        chkSelect.addActionListener(e -> toggleSelected(sp, chkSelect.isSelected()));
+        chkSelect.addActionListener(e -> toggleSelected(sp, chkSelect.isSelected(), card));
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 chkSelect.setSelected(!chkSelect.isSelected());
-                toggleSelected(sp, chkSelect.isSelected());
+                toggleSelected(sp, chkSelect.isSelected(), card);
             }
 
             @Override
@@ -338,7 +351,7 @@ public class JFGioHangSanPham extends JDialog {
         return card;
     }
 
-    private void toggleSelected(SanPham sp, boolean selected) {
+    private void toggleSelected(SanPham sp, boolean selected, JPanel card) {
         if (selected) {
             selectedProducts.put(sp.getMaSP(), sp);
             selectedQuantities.putIfAbsent(sp.getMaSP(), 1);
@@ -346,8 +359,10 @@ public class JFGioHangSanPham extends JDialog {
             selectedProducts.remove(sp.getMaSP());
             selectedQuantities.remove(sp.getMaSP());
         }
+        applyCardStyle(card, selected, false);
+        card.revalidate();
+        card.repaint();
         updateSelectedSummary();
-        refreshProducts();
     }
 
     private void addSelectedProducts() {
@@ -420,7 +435,6 @@ public class JFGioHangSanPham extends JDialog {
             }
             lblQuantity.setText(String.valueOf(current));
             updateSelectedSummary();
-            refreshProducts();
         });
         btnPlus.addActionListener(e -> {
             ensureSelected(sp);
@@ -431,7 +445,6 @@ public class JFGioHangSanPham extends JDialog {
             }
             lblQuantity.setText(String.valueOf(current));
             updateSelectedSummary();
-            refreshProducts();
         });
 
         panel.add(btnMinus, BorderLayout.WEST);
@@ -509,7 +522,7 @@ public class JFGioHangSanPham extends JDialog {
         if (safeText.length() > maxLength) {
             safeText = safeText.substring(0, maxLength - 1) + ".";
         }
-        return "<html>" + safeText + "</html>";
+        return "<html><body style='width: 220px'>" + safeText + "</body></html>";
     }
 
     private String formatVND(double amount) {
