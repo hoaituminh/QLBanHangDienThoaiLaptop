@@ -222,7 +222,7 @@ public class JFDashboard extends JPanel {
         statsPanel.add(hoaDonCard.panel);
 
         // 3. Thẻ tổng sản phẩm: Nền tím nhạt, biểu tượng màu tím đậm
-        StatCard sanPhamCard = createStatCard("TỔNG SẢN PHẨM", "0", 
+        StatCard sanPhamCard = createStatCard("TỔNG SẢN PHẨM TỒN KHO", "0", 
                 new Color(30, 41, 59), 
                 new Color(243, 232, 255), 
                 new Color(126, 34, 206), 
@@ -260,7 +260,7 @@ public class JFDashboard extends JPanel {
         gbc.weightx = 1.0;
 
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
         titleLabel.setForeground(util.TechStoreUI.TEXT_MUTED);
         gbc.gridy = 0;
         textContainer.add(titleLabel, gbc);
@@ -272,7 +272,7 @@ public class JFDashboard extends JPanel {
         textContainer.add(valueLabel, gbc);
 
         JLabel descLabel = new JLabel(description);
-        descLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
+        descLabel.setFont(new Font("Segoe UI", Font.ITALIC, 14));
         descLabel.setForeground(util.TechStoreUI.TEXT_MUTED);
         gbc.gridy = 2;
         textContainer.add(descLabel, gbc);

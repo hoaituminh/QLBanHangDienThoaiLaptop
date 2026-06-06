@@ -60,7 +60,7 @@ public class DashboardController {
 
                 // Số loại sản phẩm (COUNT) hiển thị ở mô tả
                 int tongSanPham = sanPhamDAO.getCount();
-                view.getLblTongSanPhamDesc().setText(tongSanPham + " loại sản phẩm trong kho");
+                view.getLblTongSanPhamDesc().setText(tongSanPham + " loại mặt hàng trong kho");
 
                 // Load hóa đơn gần đây
                 loadHoaDonGanDay();

@@ -61,17 +61,17 @@ public class JFMenu extends JFrame {
         new MenuEntry("Trang Chủ (Dashboard)", "TC", "Dashboard",
                       "Trang Chủ (Dashboard)",                    "Hệ Thống Live", false),
         new MenuEntry("Lập Hóa Đơn (POS)",    "HĐ", "LapHoaDon",
-                      "Lập Hóa Đơn Bán Hàng (JFLapHoaDon)",      "Giao Dịch",    true),
+                      "Lập Hóa Đơn Bán Hàng (LapHoaDon)",      "Giao Dịch",    true),
         new MenuEntry("Quản Lý Sản Phẩm",     "SP", "SanPham",
-                      "Quản Lý Hệ Thống Sản Phẩm (JFSanPham)",   "Sản phẩm",    false),
+                      "Quản Lý Hệ Thống Sản Phẩm (SanPham)",   "Sản phẩm",    false),
         new MenuEntry("Thống Kê",             "TK", "ThongKe",
-                      "Thống Kê Bán Hàng (JFThongKe)",            "Biểu đồ",     false),
+                      "Thống Kê Bán Hàng (ThongKe)",            "Biểu đồ",     false),
         new MenuEntry("Quản Lý Khách Hàng",   "KH", "KhachHang",
-                      "Quản Lý Khách Hàng (JFKhachHang)",         "Đối tác",     false),
+                      "Quản Lý Khách Hàng (KhachHang)",         "Đối tác",     false),
         new MenuEntry("Quản Lý Nhân Viên",    "NV", "NhanVien",
-                      "Quản Lý Nhân Sự (JFNhanVien)",             "Nhân viên",   false),
+                      "Quản Lý Nhân Sự (NhanVien)",             "Nhân viên",   false),
         new MenuEntry("Quản Lý Tài Khoản",    "TK", "TaiKhoan",
-                      "Phân Quyền & Quản Lý Tài Khoản (JFTaiKhoan)", "Bảo mật", false),
+                      "Phân Quyền & Quản Lý Tài Khoản (TaiKhoan)", "Bảo mật", false),
     };
 
     // ── Colors ─────────────────────────────────────────────────────────────────
