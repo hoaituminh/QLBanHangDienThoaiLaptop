@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,6 +75,10 @@ public class JFMenu extends JFrame {
         new MenuEntry("Quản Lý Tài Khoản",    "TK", "TaiKhoan",
                       "Phân Quyền & Quản Lý Tài Khoản (TaiKhoan)", "Bảo mật", false),
     };
+
+    // ── PDF Guide Path ─────────────────────────────────────────────────────────
+    /** Đặt file PDF vào cùng thư mục chạy ứng dụng, hoặc đổi đường dẫn tuyệt đối ở đây */
+    private static final String PDF_GUIDE_FILENAME = "huong_dan_su_dung.pdf";
 
     // ── Colors ─────────────────────────────────────────────────────────────────
     private final Color sidebarBg    = new Color(15,  23,  42);
@@ -386,6 +392,10 @@ addWindowFocusListener(new WindowAdapter() {
         addDrawerItem(pnlNav, 4);
         addDrawerItem(pnlNav, 5);
 
+        // ── Section: HỖ TRỢ ──────────────────────────────────────────────────
+        pnlNav.add(makeCategoryLabel("HỖ TRỢ"));
+        addGuideButton(pnlNav);
+
         drawer.add(pnlNav);
         drawer.add(Box.createVerticalGlue());
 
@@ -460,6 +470,87 @@ addWindowFocusListener(new WindowAdapter() {
             }
         });
         drawerItems.add(item);
+        nav.add(item);
+    }
+
+    /** Nút "Hướng dẫn sử dụng" — mở file PDF khi click */
+    private void addGuideButton(JPanel nav) {
+        final boolean[] hovered = {false};
+
+        JPanel item = new JPanel(new BorderLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                if (hovered[0]) {
+                    g2.setColor(sidebarHover);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                }
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        item.setOpaque(false);
+        item.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        item.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        item.setAlignmentX(Component.LEFT_ALIGNMENT);
+        item.setBorder(new EmptyBorder(2, 4, 2, 4));
+
+        JPanel pnlLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 8));
+        pnlLeft.setOpaque(false);
+
+        JLabel lblIcon = new JLabel("\uD83D\uDCD6"); // 📖 emoji
+        lblIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 14));
+
+        JLabel lblText = new JLabel("Hướng dẫn sử dụng");
+        lblText.setForeground(textNormal);
+        lblText.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+        pnlLeft.add(lblIcon);
+        pnlLeft.add(lblText);
+        item.add(pnlLeft, BorderLayout.CENTER);
+
+        // Badge "PDF" màu đỏ bên phải
+        JLabel lblPdfBadge = new JLabel("PDF") {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(239, 68, 68));
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 20, 20));
+                g2.setColor(Color.WHITE);
+                g2.setFont(getFont());
+                FontMetrics fm = g2.getFontMetrics();
+                String t = getText();
+                g2.drawString(t, (getWidth() - fm.stringWidth(t)) / 2,
+                              (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
+                g2.dispose();
+            }
+        };
+        lblPdfBadge.setFont(new Font("Segoe UI", Font.BOLD, 9));
+        lblPdfBadge.setForeground(Color.WHITE);
+        lblPdfBadge.setOpaque(false);
+        lblPdfBadge.setBorder(new EmptyBorder(2, 7, 2, 7));
+        JPanel pnlRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
+        pnlRight.setOpaque(false);
+        pnlRight.add(lblPdfBadge);
+        item.add(pnlRight, BorderLayout.EAST);
+
+        item.addMouseListener(new MouseAdapter() {
+            @Override public void mouseEntered(MouseEvent e) {
+                hovered[0] = true;
+                lblText.setForeground(Color.WHITE);
+                item.repaint();
+            }
+            @Override public void mouseExited(MouseEvent e) {
+                hovered[0] = false;
+                lblText.setForeground(textNormal);
+                item.repaint();
+            }
+            @Override public void mouseClicked(MouseEvent e) {
+                openUserGuide();
+                closeDrawer();
+            }
+        });
+
         nav.add(item);
     }
 
@@ -568,6 +659,41 @@ addWindowFocusListener(new WindowAdapter() {
         });
         
         pnlHeaderRight.add(btnTheme);
+
+        // Nút "Hướng dẫn sử dụng" trên header
+        JButton btnHelp = new JButton("\u2753") { // ❓
+            private boolean overed = false;
+            {
+                setFont(new Font("Segoe UI Emoji", Font.PLAIN, 16));
+                setPreferredSize(new Dimension(36, 36));
+                setFocusPainted(false);
+                setContentAreaFilled(false);
+                setBorderPainted(false);
+                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                setToolTipText("Hướng dẫn sử dụng (PDF)");
+                addMouseListener(new MouseAdapter() {
+                    @Override public void mouseEntered(MouseEvent e) {
+                        overed = true; repaint();
+                    }
+                    @Override public void mouseExited(MouseEvent e) {
+                        overed = false; repaint();
+                    }
+                });
+                addActionListener(e -> openUserGuide());
+            }
+            @Override protected void paintComponent(Graphics g) {
+                if (overed) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(util.TechStoreUI.isDarkMode()
+                        ? new Color(30, 41, 59) : util.TechStoreUI.BG_MAIN);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                    g2.dispose();
+                }
+                super.paintComponent(g);
+            }
+        };
+        pnlHeaderRight.add(btnHelp);
 
         pnlHeader.add(pnlTitleGroup,  BorderLayout.WEST);
         pnlHeader.add(pnlHeaderRight, BorderLayout.EAST);
@@ -930,6 +1056,51 @@ addWindowFocusListener(new WindowAdapter() {
         util.TechStoreUI.installLookAndFeel();
         SwingUtilities.invokeLater(() -> new JFMenu("Người dùng", "USER").setVisible(true));
     }
+    // ══════════════════════════════════════════════════════════════════════════
+    // MỞ FILE PDF HƯỚNG DẪN SỬ DỤNG
+    // ══════════════════════════════════════════════════════════════════════════
+    /**
+     * Mở file PDF hướng dẫn sử dụng.
+     * Đặt file "huong_dan_su_dung.pdf" vào thư mục gốc của project/JAR.
+     * Hoặc đổi PDF_GUIDE_FILENAME thành đường dẫn tuyệt đối, ví dụ:
+     *   "C:/TechStore/huong_dan_su_dung.pdf"
+     */
+    private void openUserGuide() {
+        File pdfFile = new File(PDF_GUIDE_FILENAME);
+
+        // Nếu không tìm thấy theo đường dẫn tương đối, thử từ thư mục chạy app
+        if (!pdfFile.exists()) {
+            pdfFile = new File(System.getProperty("user.dir"), PDF_GUIDE_FILENAME);
+        }
+
+        if (!pdfFile.exists()) {
+            JOptionPane.showMessageDialog(this,
+                "<html><b>Không tìm thấy file hướng dẫn sử dụng!</b><br><br>"
+                + "Vui lòng đặt file <b>" + PDF_GUIDE_FILENAME + "</b><br>"
+                + "vào thư mục: <br><i>" + new File(System.getProperty("user.dir")).getAbsolutePath() + "</i>"
+                + "<br><br>Hoặc chỉnh đường dẫn trong hằng số <b>PDF_GUIDE_FILENAME</b>.</html>",
+                "Không tìm thấy file", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!Desktop.isDesktopSupported()
+                || !Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+            JOptionPane.showMessageDialog(this,
+                "Hệ thống không hỗ trợ mở file PDF tự động.\n"
+                + "Vui lòng mở thủ công: " + pdfFile.getAbsolutePath(),
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        try {
+            Desktop.getDesktop().open(pdfFile);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                "Lỗi khi mở file PDF:\n" + ex.getMessage(),
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /** Gọi loadData() dù private/public — dùng reflection */
 private void invokeLoadData(Object ctrl) {
     try {
